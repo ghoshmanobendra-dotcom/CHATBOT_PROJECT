@@ -1,0 +1,2 @@
+# Stages 1 and 2 use only the Python standard library (Python 3.8+).
+# Later stages will add packages here (e.g. nltk, scikit-learn, flask).

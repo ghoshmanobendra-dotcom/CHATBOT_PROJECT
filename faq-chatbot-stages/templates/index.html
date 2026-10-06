@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>GCECT IT Chatbot — College Assistant</title>
+  <meta name="description" content="Ask any question about GCECT IT Department — subjects, faculty, fees, placements, exams, and more." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/static/style.css" />
+</head>
+<body>
+
+  <!-- Background blobs -->
+  <div class="bg-blob blob-1"></div>
+  <div class="bg-blob blob-2"></div>
+  <div class="bg-blob blob-3"></div>
+
+  <div class="app-wrapper">
+
+    <!-- HEADER -->
+    <header class="chat-header">
+      <div class="header-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M12 2a5 5 0 1 1 0 10A5 5 0 0 1 12 2zm0 12c5.523 0 10 2.239 10 5v1H2v-1c0-2.761 4.477-5 10-5z"/>
+        </svg>
+      </div>
+      <div class="header-text">
+        <h1>GCECT IT Assistant</h1>
+        <p class="header-sub">Government College of Engineering &amp; Ceramic Technology</p>
+      </div>
+      <div class="status-dot" title="Online"></div>
+      <a href="/" class="back-link" title="Back to Home">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
+      </a>
+    </header>
+
+    <!-- QUICK TOPIC CHIPS -->
+    <div class="chip-bar" id="chip-bar">
+      <button class="chip" data-q="Who is the HOD?">HOD</button>
+      <button class="chip" data-q="What are the 5th semester subjects?">Sem 5</button>
+      <button class="chip" data-q="What is DSA?">DSA</button>
+      <button class="chip" data-q="What is DBMS?">DBMS</button>
+      <button class="chip" data-q="Tell me about the exam pattern">Exam Pattern</button>
+      <button class="chip" data-q="What are the fees?">Fees</button>
+      <button class="chip" data-q="Placement details">Placement</button>
+      <button class="chip" data-q="Tell me about internships">Internship</button>
+      <button class="chip" data-q="What is Bytemonk?">Bytemonk</button>
+      <button class="chip" data-q="Contact details">Contact</button>
+    </div>
+
+    <!-- CHAT WINDOW -->
+    <main class="chat-window" id="chat-box" role="log" aria-live="polite">
+      <!-- Welcome message injected by JS -->
+    </main>
+
+    <!-- INPUT AREA -->
+    <footer class="chat-input-area">
+      <div class="input-wrapper">
+        <input
+          type="text"
+          id="message"
+          placeholder="Ask about subjects, fees, faculty, exams…"
+          autocomplete="off"
+          aria-label="Type your question"
+          maxlength="300"
+        />
+        <button id="send-btn" aria-label="Send message">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/>
+          </svg>
+        </button>
+      </div>
+      <p class="input-hint">Press <kbd>Enter</kbd> to send &nbsp;·&nbsp; Ask anything about GCECT</p>
+    </footer>
+
+  </div><!-- /app-wrapper -->
+
+  <script>
+    const chatBox  = document.getElementById('chat-box');
+    const input    = document.getElementById('message');
+    const sendBtn  = document.getElementById('send-btn');
+    const chipBar  = document.getElementById('chip-bar');
+
+    // ── helpers ────────────────────────────────────────────────────────
+    function escapeHtml(text) {
+      return text
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;');
+    }
+
+    /** Convert plain-text formatting to HTML */
+    function formatText(text) {
+      // Linkify URLs
+      let html = escapeHtml(text).replace(
+        /(https?:\/\/[^\s]+)/g,
+        '<a href="$1" target="_blank" rel="noopener">$1</a>'
+      );
+      // Bold (**text** or <strong>…</strong> kept from server)
+      html = html.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+      // Bullet points (lines starting with •, -, *)
+      html = html.replace(/^([•\-\*])\s+/gm, '<li>');
+      // Newlines to <br>
+      html = html.replace(/\n/g, '<br>');
+      return html;
+    }
+
+    function addMessage(text, role) {
+      const wrap = document.createElement('div');
+      wrap.className = 'msg-row ' + role;
+
+      if (role === 'bot') {
+        const avatar = document.createElement('div');
+        avatar.className = 'avatar bot-avatar';
+        avatar.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a5 5 0 1 1 0 10A5 5 0 0 1 12 2zm0 12c5.523 0 10 2.239 10 5v1H2v-1c0-2.761 4.477-5 10-5z"/></svg>';
+        wrap.appendChild(avatar);
+      }
+
+      const bubble = document.createElement('div');
+      bubble.className = 'bubble';
+      bubble.innerHTML = formatText(text);
+      wrap.appendChild(bubble);
+
+      if (role === 'user') {
+        const avatar = document.createElement('div');
+        avatar.className = 'avatar user-avatar';
+        avatar.textContent = 'You';
+        wrap.appendChild(avatar);
+      }
+
+      chatBox.appendChild(wrap);
+      chatBox.scrollTop = chatBox.scrollHeight;
+    }
+
+    function showTyping() {
+      const wrap = document.createElement('div');
+      wrap.className = 'msg-row bot';
+      wrap.id = 'typing-indicator';
+
+      const avatar = document.createElement('div');
+      avatar.className = 'avatar bot-avatar';
+      avatar.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a5 5 0 1 1 0 10A5 5 0 0 1 12 2zm0 12c5.523 0 10 2.239 10 5v1H2v-1c0-2.761 4.477-5 10-5z"/></svg>';
+
+      const bubble = document.createElement('div');
+      bubble.className = 'bubble typing';
+      bubble.innerHTML = '<span></span><span></span><span></span>';
+
+      wrap.appendChild(avatar);
+      wrap.appendChild(bubble);
+      chatBox.appendChild(wrap);
+      chatBox.scrollTop = chatBox.scrollHeight;
+    }
+
+    function removeTyping() {
+      const el = document.getElementById('typing-indicator');
+      if (el) el.remove();
+    }
+
+    // ── send ───────────────────────────────────────────────────────────
+    async function sendMessage(text) {
+      const msg = (text || input.value).trim();
+      if (!msg) return;
+
+      addMessage(msg, 'user');
+      input.value = '';
+      sendBtn.disabled = true;
+      showTyping();
+
+      try {
+        const res = await fetch('/chat', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ message: msg }),
+        });
+        const data = await res.json();
+        removeTyping();
+        addMessage(data.response, 'bot');
+      } catch (err) {
+        removeTyping();
+        addMessage('Sorry, I couldn\'t reach the server. Please try again.', 'bot');
+      }
+      sendBtn.disabled = false;
+    }
+
+    // ── events ─────────────────────────────────────────────────────────
+    sendBtn.addEventListener('click', () => sendMessage());
+    input.addEventListener('keydown', e => { if (e.key === 'Enter') sendMessage(); });
+
+    chipBar.querySelectorAll('.chip').forEach(chip => {
+      chip.addEventListener('click', () => sendMessage(chip.dataset.q));
+    });
+
+    // ── welcome ────────────────────────────────────────────────────────
+    window.addEventListener('DOMContentLoaded', () => {
+      addMessage(
+        'Hello! 👋 I\'m the GCECT IT Department assistant.\n' +
+        'I can answer questions about subjects, faculty, fees, exams, placements, scholarships, and more.\n' +
+        'Use the quick-topic chips above or just type your question below!',
+        'bot'
+      );
+    });
+  </script>
+</body>
+</html>

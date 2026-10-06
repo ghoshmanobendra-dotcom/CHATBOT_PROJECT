@@ -1,0 +1,565 @@
+{
+  "intents": [
+    {
+      "tag": "greeting",
+      "patterns": [
+        "hello", "hi", "hey", "namaste", "good morning", "good afternoon",
+        "good evening", "is anyone there", "howdy", "greetings", "sup"
+      ],
+      "responses": [
+        "Hello! I'm the GCECT IT Department assistant. Ask me anything about GCECT, the IT department, subjects, fees, placements, and more! Type 'help' to see all topics.",
+        "Hi there! Welcome to the GCECT IT Department chatbot. How can I help you today?",
+        "Hey! I'm here to answer all your questions about GCECT. What would you like to know?"
+      ]
+    },
+    {
+      "tag": "goodbye",
+      "patterns": [
+        "bye", "goodbye", "see you", "thanks bye", "that's all", "exit", "quit",
+        "ok bye", "thank you bye", "take care"
+      ],
+      "responses": [
+        "Thank you! Have a great day! Feel free to ask again anytime.",
+        "Goodbye! Best of luck with your studies at GCECT!",
+        "See you! Don't hesitate to come back if you have more questions."
+      ]
+    },
+    {
+      "tag": "thanks",
+      "patterns": [
+        "thank you", "thanks", "thankyou", "thank u", "thanks a lot",
+        "much appreciated", "great thanks"
+      ],
+      "responses": [
+        "You're welcome! Is there anything else I can help you with?",
+        "Happy to help! Feel free to ask more questions.",
+        "Glad I could assist! Ask me anything else about GCECT."
+      ]
+    },
+    {
+      "tag": "help",
+      "patterns": [
+        "help", "what can you do", "what do you know", "topics", "menu",
+        "what can I ask", "show options", "list topics"
+      ],
+      "responses": [
+        "I can help you with:\n- College info & address\n- HOD & Faculty details\n- Department location & timings\n- Semester-wise syllabus (Sem 1-8)\n- Subject details (DSA, DBMS, OS, AI, etc.)\n- Exam schedule & pattern\n- Admission documents\n- Fees & Scholarships\n- Placement & Training Cell\n- Clubs (Bytemonk)\n- Internship & Training\n- Holidays & Academic Calendar\n- Contact details\n\nJust ask naturally, e.g., '3rd semester subjects' or 'What is the HOD room number?'"
+      ]
+    },
+    {
+      "tag": "about_college",
+      "patterns": [
+        "what is gcect", "tell me about the college", "full name of the college",
+        "college name", "which college is this", "about gcect", "what is the full form of gcect",
+        "gcect full form", "college affiliation", "is gcect autonomous",
+        "makaut affiliation", "gcect university", "what university does gcect belong to",
+        "college details", "about this college"
+      ],
+      "responses": [
+        "Government College of Engineering & Ceramic Technology (GCECT), Kolkata.\nAffiliation: An Autonomous Institution under MAKAUT.\nAddress: 73, Abinash Chandra Banerjee Ln, Subhas Sarobar Park, Phoolbagan, Beleghata, Kolkata, West Bengal 700010.\nWebsite: https://gcect.ac.in/"
+      ]
+    },
+    {
+      "tag": "address",
+      "patterns": [
+        "college address", "where is gcect", "gcect location", "how to reach gcect",
+        "gcect address", "where is the college located", "college city",
+        "gcect kolkata", "gcect beleghata"
+      ],
+      "responses": [
+        "GCECT is located at:\n73, Abinash Chandra Banerjee Ln, Subhas Sarobar Park, Phoolbagan, Beleghata, Kolkata, West Bengal 700010.\nWebsite: https://gcect.ac.in/"
+      ]
+    },
+    {
+      "tag": "hod",
+      "patterns": [
+        "who is the hod", "head of department", "hod name", "hod room",
+        "hod cabin", "hod office", "hod it department", "it department hod",
+        "who is the head", "hod contact", "prof maitra", "mausumi maitra"
+      ],
+      "responses": [
+        "The HOD of the IT Department is Prof. (Dr.) Mausumi Maitra (Mazumdar).\nOffice: Room 301, Floor 3, Administrative Building, GCECT."
+      ]
+    },
+    {
+      "tag": "faculty",
+      "patterns": [
+        "faculty list", "who are the teachers", "faculty members", "professors in it",
+        "it department faculty", "who teaches in it", "staff list", "lecturers",
+        "show faculty", "faculty details"
+      ],
+      "responses": [
+        "You can view the complete IT Department faculty list here:\nhttps://gcect.ac.in/department-of-information-technology/"
+      ]
+    },
+    {
+      "tag": "department_location",
+      "patterns": [
+        "where is the it department", "it department location", "which building is it department",
+        "which floor is it department", "how to find it department", "it department building",
+        "department location", "where is the department", "it department floor"
+      ],
+      "responses": [
+        "The IT Department is on Floor 3 of the Administrative Building, GCECT.\nAddress: 73, Abinash Chandra Banerjee Ln, Beleghata, Kolkata, West Bengal 700010."
+      ]
+    },
+    {
+      "tag": "department_timings",
+      "patterns": [
+        "department timings", "office hours", "office timing", "when does department open",
+        "when does office open", "department working hours", "what time does department open",
+        "it department hours"
+      ],
+      "responses": [
+        "The IT Department office is open from 10 AM to 5 PM on working days."
+      ]
+    },
+    {
+      "tag": "library",
+      "patterns": [
+        "library timings", "library hours", "when does the library open",
+        "when does the library close", "library timing", "what time library opens",
+        "gcect library"
+      ],
+      "responses": [
+        "The GCECT Library is open from 10 AM to 5 PM on working days."
+      ]
+    },
+    {
+      "tag": "lab_timings",
+      "patterns": [
+        "lab timings", "lab hours", "practical class timing", "when are practical classes",
+        "laboratory timing", "what time are labs", "lab schedule", "practical timing"
+      ],
+      "responses": [
+        "Laboratory / Practical class timings: 2:10 PM to 5 PM."
+      ]
+    },
+    {
+      "tag": "semester1",
+      "patterns": [
+        "1st semester subjects", "first semester subjects", "sem 1 subjects",
+        "semester 1 syllabus", "first year first semester", "what subjects in sem 1",
+        "1st sem syllabus", "1st year 1st semester"
+      ],
+      "responses": [
+        "Semester 1 (16 Credits):\nTheory: Mathematics-I, Physics, Basic Electrical Engineering, English.\nLabs: Physics Lab, BEE Lab, Engineering Graphics & Design, English Communication Lab.\nNote: Includes a mandatory 3-week induction program."
+      ]
+    },
+    {
+      "tag": "semester2",
+      "patterns": [
+        "2nd semester subjects", "second semester subjects", "sem 2 subjects",
+        "semester 2 syllabus", "first year second semester", "what subjects in sem 2",
+        "2nd sem syllabus", "1st year 2nd semester"
+      ],
+      "responses": [
+        "Semester 2 (22.5 Credits):\nTheory: Mathematics-II, Chemistry, Programming for Problem Solving, Analog and Digital Electronics, Universal Human Values.\nLabs: Chemistry Lab, Programming Lab, Workshop/Manufacturing Practices, Electronics Lab, Design Thinking Lab, NSS.\nNote: 2 to 4 weeks summer training/internship, evaluated in 3rd semester."
+      ]
+    },
+    {
+      "tag": "semester3",
+      "patterns": [
+        "3rd semester subjects", "third semester subjects", "sem 3 subjects",
+        "semester 3 syllabus", "2nd year 1st semester", "what subjects in sem 3",
+        "3rd sem syllabus", "second year first semester"
+      ],
+      "responses": [
+        "Semester 3 (26 Credits):\nTheory: Mathematics-III, Communication Engineering, Computer Organization, Data Structure & Algorithms, Economics for Engineers, Environmental Sciences.\nLabs: CO Lab, DSA Lab, IT Workshop (Python), Communication Engineering Lab, Summer Internship 1."
+      ]
+    },
+    {
+      "tag": "semester4",
+      "patterns": [
+        "4th semester subjects", "fourth semester subjects", "sem 4 subjects",
+        "semester 4 syllabus", "2nd year 2nd semester", "what subjects in sem 4",
+        "4th sem syllabus", "second year second semester"
+      ],
+      "responses": [
+        "Semester 4 (24 Credits):\nTheory: Discrete Mathematics, Design & Analysis of Algorithm, Formal Language and Automata Theory, Computer Architecture, Biology for Engineers, Constitution of India.\nLabs: Algorithm Lab, Programming Lab (C++), Project 1 (part 1).\nNote: 2 to 4 weeks summer training/internship, evaluated in 5th semester."
+      ]
+    },
+    {
+      "tag": "semester5",
+      "patterns": [
+        "5th semester subjects", "fifth semester subjects", "sem 5 subjects",
+        "semester 5 syllabus", "3rd year 1st semester", "what subjects in sem 5",
+        "5th sem syllabus", "third year first semester"
+      ],
+      "responses": [
+        "Semester 5 (25.5 Credits):\nTheory: Operating Systems, Database Management System, Object Oriented Programming, Artificial Intelligence, Open Elective-1 (Control System / Microprocessor / DSP / Advanced Computer Architecture).\nLabs: OS Lab, DBMS Lab, Java Lab, Open Elective Lab, Project 1 (part 2), Summer Internship 2."
+      ]
+    },
+    {
+      "tag": "semester6",
+      "patterns": [
+        "6th semester subjects", "sixth semester subjects", "sem 6 subjects",
+        "semester 6 syllabus", "3rd year 2nd semester", "what subjects in sem 6",
+        "6th sem syllabus", "third year second semester"
+      ],
+      "responses": [
+        "Semester 6 (25 Credits):\nTheory: Computer Networks, Compiler Design, Software Engineering, Introduction to Cyber Security, Elective-I, Open Elective-II.\nLabs: CN Lab, SE Lab, Elective-I Lab, Project 1 (part 3).\nNote: 4 to 6 weeks industrial training in summer, evaluated in 7th semester."
+      ]
+    },
+    {
+      "tag": "semester7",
+      "patterns": [
+        "7th semester subjects", "seventh semester subjects", "sem 7 subjects",
+        "semester 7 syllabus", "4th year 1st semester", "what subjects in sem 7",
+        "7th sem syllabus", "fourth year first semester"
+      ],
+      "responses": [
+        "Semester 7 (20 Credits):\nTheory: Elective-II, Elective-III, Elective-IV, Open Elective-III, Industrial Management.\nLabs: Project 2 / Internship / Industrial Project, Industrial Training."
+      ]
+    },
+    {
+      "tag": "semester8",
+      "patterns": [
+        "8th semester subjects", "eighth semester subjects", "sem 8 subjects",
+        "semester 8 syllabus", "4th year 2nd semester", "what subjects in sem 8",
+        "8th sem syllabus", "fourth year second semester", "final semester"
+      ],
+      "responses": [
+        "Semester 8 (7 Credits):\nTheory: No theory papers in this semester.\nLabs: Project 3 / Internship / Industrial Project, Comprehensive Viva Voce."
+      ]
+    },
+    {
+      "tag": "first_year",
+      "patterns": [
+        "1st year subjects", "first year subjects", "first year syllabus",
+        "what subjects in first year", "year 1 subjects"
+      ],
+      "responses": [
+        "First Year (Sem 1 & 2):\n\nSem 1 (16 Credits): Maths-I, Physics, BEE, English + Labs + 3-week induction.\n\nSem 2 (22.5 Credits): Maths-II, Chemistry, Programming, Electronics, UHV + Labs + Summer Internship (evaluated in Sem 3)."
+      ]
+    },
+    {
+      "tag": "second_year",
+      "patterns": [
+        "2nd year subjects", "second year subjects", "second year syllabus",
+        "what subjects in second year", "year 2 subjects"
+      ],
+      "responses": [
+        "Second Year (Sem 3 & 4):\n\nSem 3 (26 Credits): Maths-III, Comm Engg, CO, DSA, Economics, EVS + Labs + Summer Internship 1.\n\nSem 4 (24 Credits): Discrete Maths, DAA, FLAT, COA, Biology, Constitution of India + Labs + Project 1 (part 1)."
+      ]
+    },
+    {
+      "tag": "third_year",
+      "patterns": [
+        "3rd year subjects", "third year subjects", "third year syllabus",
+        "what subjects in third year", "year 3 subjects"
+      ],
+      "responses": [
+        "Third Year (Sem 5 & 6):\n\nSem 5 (25.5 Credits): OS, DBMS, OOP, AI, Open Elective-1 + Labs + Summer Internship 2.\n\nSem 6 (25 Credits): Computer Networks, Compiler Design, Software Engineering, Cyber Security, Electives + Labs + Industrial Training."
+      ]
+    },
+    {
+      "tag": "fourth_year",
+      "patterns": [
+        "4th year subjects", "fourth year subjects", "fourth year syllabus",
+        "what subjects in fourth year", "year 4 subjects", "final year subjects"
+      ],
+      "responses": [
+        "Fourth Year (Sem 7 & 8):\n\nSem 7 (20 Credits): Elective-II, III, IV, Open Elective-III, Industrial Management + Project 2 + Industrial Training.\n\nSem 8 (7 Credits): No theory — only Project 3 / Internship and Comprehensive Viva Voce."
+      ]
+    },
+    {
+      "tag": "subject_dsa",
+      "patterns": [
+        "data structure", "dsa", "data structures and algorithms", "data structure syllabus",
+        "what is dsa", "dsa topics", "data structure subjects", "pc it 302"
+      ],
+      "responses": [
+        "Data Structure & Algorithms (Code: PC(IT)302) - Semester 3, 4 Credits (L-T-P: 3-1-0).\nTopics: Algorithm analysis; arrays, linked lists, stacks, queues; trees, heaps, graphs; searching and sorting; hashing."
+      ]
+    },
+    {
+      "tag": "subject_os",
+      "patterns": [
+        "operating system", "os syllabus", "what is operating systems",
+        "os topics", "operating systems subject", "os subject", "pc it 511"
+      ],
+      "responses": [
+        "Operating Systems (Code: PC(IT)511) - Semester 5, 4 Credits (L-T-P: 3-1-0).\nTopics: Processes and threads; CPU scheduling, synchronization, deadlocks; memory management and virtual memory; file systems; disk and I/O management; protection and security."
+      ]
+    },
+    {
+      "tag": "subject_dbms",
+      "patterns": [
+        "dbms", "database management", "database management system",
+        "dbms syllabus", "database subject", "dbms topics", "pc it 512"
+      ],
+      "responses": [
+        "Database Management System (Code: PC(IT)512) - Semester 5, 4 Credits (L-T-P: 3-1-0).\nTopics: ER model; relational algebra and SQL; normalization; transactions and concurrency control; indexing and B+ trees."
+      ]
+    },
+    {
+      "tag": "subject_ai",
+      "patterns": [
+        "artificial intelligence", "ai subject", "ai syllabus", "ai topics",
+        "what is artificial intelligence", "machine learning subject", "pc it 514"
+      ],
+      "responses": [
+        "Artificial Intelligence (Code: PC(IT)514) - Semester 5, 3 Credits (L-T-P: 3-0-0).\nTopics: Intelligent agents; search techniques (BFS, A*, minimax); knowledge and reasoning; machine learning and planning; generative AI tools and applications."
+      ]
+    },
+    {
+      "tag": "subject_cn",
+      "patterns": [
+        "computer networks", "cn syllabus", "networking subject", "cn topics",
+        "computer network subject", "networking syllabus"
+      ],
+      "responses": [
+        "Computer Networks (Semester 6).\nTopics: OSI and TCP/IP model; routing and switching; network security; transport protocols (TCP, UDP); wireless and cellular networking."
+      ]
+    },
+    {
+      "tag": "subject_co",
+      "patterns": [
+        "computer organization", "co subject", "computer organisation",
+        "co syllabus", "computer organization topics", "pc it 301"
+      ],
+      "responses": [
+        "Computer Organization (Code: PC(IT)301) - Semester 3, 4 Credits (L-T-P: 3-1-0).\nTopics: Instruction set and processor design; control unit design; memory subsystem; peripherals and I/O (DMA, RAID); pipelining."
+      ]
+    },
+    {
+      "tag": "subject_daa",
+      "patterns": [
+        "design and analysis of algorithm", "daa", "daa syllabus", "algorithm design",
+        "analysis of algorithms subject", "daa topics", "pc it 406"
+      ],
+      "responses": [
+        "Design & Analysis of Algorithm (Code: PC(IT)406) - Semester 4, 4 Credits (L-T-P: 3-1-0).\nTopics: Design paradigms (divide and conquer, greedy, dynamic programming, backtracking); sorting; graph algorithms; string matching; amortized analysis; P and NP."
+      ]
+    },
+    {
+      "tag": "subject_flat",
+      "patterns": [
+        "automata", "flat", "theory of computation", "toc",
+        "formal language", "formal language and automata", "automata theory", "pc it 407"
+      ],
+      "responses": [
+        "Formal Language and Automata Theory (Code: PC(IT)407) - Semester 4, 4 Credits (L-T-P: 3-1-0).\nTopics: Finite automata and regular languages; context-free grammars and pushdown automata; context-sensitive languages; Turing machines; undecidability."
+      ]
+    },
+    {
+      "tag": "subject_oop",
+      "patterns": [
+        "object oriented programming", "oop", "java subject", "oop syllabus",
+        "java programming", "oop topics", "oops", "pc it 513"
+      ],
+      "responses": [
+        "Object Oriented Programming (Code: PC(IT)513) - Semester 5, 4 Credits (L-T-P: 3-1-0).\nTopics: OOP concepts and Java basics; inheritance, polymorphism, abstract classes, interfaces, packages; exception handling; multithreading; applets."
+      ]
+    },
+    {
+      "tag": "subject_coa",
+      "patterns": [
+        "computer architecture", "coa", "coa syllabus", "computer architecture topics",
+        "advanced computer architecture", "pc it 408"
+      ],
+      "responses": [
+        "Computer Architecture (Code: PC(IT)408) - Semester 4, 4 Credits (L-T-P: 3-1-0).\nTopics: Pipelining and hazards; memory modules; cache and virtual memory; instruction-level parallelism (RISC, VLIW); multiprocessors; VHDL and CAD tools."
+      ]
+    },
+    {
+      "tag": "subject_discrete_math",
+      "patterns": [
+        "discrete mathematics", "discrete math", "discrete maths syllabus",
+        "discrete math topics", "dm subject", "bs it 409"
+      ],
+      "responses": [
+        "Discrete Mathematics (Code: BS(IT)409) - Semester 4, 3 Credits (L-T-P: 3-0-0).\nTopics: Number theory; counting and recurrence relations; propositional logic; algebraic structures and Boolean algebra; planar graphs and graph colouring."
+      ]
+    },
+    {
+      "tag": "subject_se",
+      "patterns": [
+        "software engineering", "se subject", "software engineering syllabus",
+        "software engineering topics"
+      ],
+      "responses": [
+        "Software Engineering (Semester 6).\nTopics: SDLC models (Agile, Waterfall); requirements engineering; design patterns; testing strategies; project management; UML."
+      ]
+    },
+    {
+      "tag": "subject_cyber",
+      "patterns": [
+        "cyber security", "cybersecurity subject", "cyber security syllabus",
+        "introduction to cyber security", "information security subject"
+      ],
+      "responses": [
+        "Introduction to Cyber Security (Semester 6).\nTopics: Cryptography; network security; ethical hacking basics; firewalls; intrusion detection; security protocols; cyber laws."
+      ]
+    },
+    {
+      "tag": "subject_maths3",
+      "patterns": [
+        "mathematics iii", "maths 3", "math iii", "mathematics 3 syllabus",
+        "bs it 307", "maths iii topics", "maths 3rd sem"
+      ],
+      "responses": [
+        "Mathematics-III (Code: BS(IT)307) - Semester 3, 3 Credits (L-T-P: 3-0-0).\nTopics: Fourier series and transforms; multivariable calculus (differentiation and integration); ordinary differential equations; graph theory."
+      ]
+    },
+    {
+      "tag": "subject_comm_engg",
+      "patterns": [
+        "communication engineering", "comm engg", "communication engineering syllabus",
+        "communication engineering topics", "es it 309"
+      ],
+      "responses": [
+        "Communication Engineering (Code: ES(IT)309) - Semester 3, 3 Credits (L-T-P: 3-0-0).\nTopics: AM, FM and PM; sampling, PCM and digital modulation (ASK, FSK, PSK); line codes; wireless and cellular communication basics."
+      ]
+    },
+    {
+      "tag": "exam_timing",
+      "patterns": [
+        "exam timing", "examination time", "when does exam start", "exam shift",
+        "what time is the exam", "exam starts at", "exam duration"
+      ],
+      "responses": [
+        "Semester examinations are held from 12 PM to 3 PM (3-hour duration).\nCheck the official schedule: https://gcect.ac.in/semester-examination-schedule/"
+      ]
+    },
+    {
+      "tag": "exam_schedule",
+      "patterns": [
+        "exam schedule", "exam routine", "exam date", "when are exams",
+        "examination schedule", "time table", "timetable", "when is the exam",
+        "semester exam date", "exam calendar"
+      ],
+      "responses": [
+        "You can find the latest semester examination schedule and routine here:\nhttps://gcect.ac.in/semester-examination-schedule/"
+      ]
+    },
+    {
+      "tag": "exam_pattern",
+      "patterns": [
+        "exam pattern", "how are exams graded", "internal marks", "mid semester marks",
+        "end semester marks", "marks distribution", "grading system",
+        "how many marks", "assessment pattern", "mid sem marks"
+      ],
+      "responses": [
+        "Exam Pattern (most theory papers):\nInternal (50 marks): Mid-Semester 1 = 15, Mid-Semester 2 = 15, Assignments/Quiz/Attendance = 20.\nEnd Semester Exam: 100 marks converted to 50.\nTotal: 100 marks.\n\nLab papers: Graded on attendance, lab report, experimental work, presentation, and viva."
+      ]
+    },
+    {
+      "tag": "admission",
+      "patterns": [
+        "how to get admission", "admission procedure", "how to apply",
+        "documents required for admission", "admission documents",
+        "what documents needed", "admission process", "how do i join gcect",
+        "requirements for admission"
+      ],
+      "responses": [
+        "Documents required for GCECT admission:\n- Aadhaar card\n- PAN card\n- Ration card\n- Domicile certificate\n- Class 10 marksheet\n- Class 12 marksheet\n- Caste certificate (if applicable)\n- Income certificate\n\nFor the latest procedure, visit: https://gcect.ac.in/"
+      ]
+    },
+    {
+      "tag": "fees",
+      "patterns": [
+        "what is the fee", "tuition fee", "how much is the fee",
+        "fee structure", "annual fee", "semester fee", "course fee", "fees"
+      ],
+      "responses": [
+        "The approximate annual tuition fee for B.Tech IT at GCECT is Rs. 13,200.\nPlease confirm the latest fee details with the college office."
+      ]
+    },
+    {
+      "tag": "scholarship",
+      "patterns": [
+        "scholarship", "svmcm", "student freeship", "financial aid",
+        "how to get scholarship", "scholarship for students", "swami vivekananda scholarship",
+        "stipend", "merit scholarship"
+      ],
+      "responses": [
+        "GCECT offers the following financial support:\n- Student Freeship\n- SVMCM (Swami Vivekananda Merit cum Means Scholarship)\n\nContact the college office or visit https://gcect.ac.in/ for application details."
+      ]
+    },
+    {
+      "tag": "placement",
+      "patterns": [
+        "placement", "recruitment", "which companies visit", "placement cell",
+        "training and placement", "job opportunities", "campus placement",
+        "salary package", "tnp cell", "placement details"
+      ],
+      "responses": [
+        "The IT Department has an active Training & Placement Cell.\nFor placement details, recruiters, and statistics, visit:\nhttps://gcect.ac.in/training-placement-dept-of-it/"
+      ]
+    },
+    {
+      "tag": "clubs",
+      "patterns": [
+        "clubs", "bytemonk", "technical club", "tech fest", "events",
+        "student societies", "activities", "extracurricular", "coding club"
+      ],
+      "responses": [
+        "The IT Department has a vibrant technical club called Bytemonk.\nBytemonk organizes coding contests, workshops, hackathons, and tech events for IT students."
+      ]
+    },
+    {
+      "tag": "internship",
+      "patterns": [
+        "internship", "summer internship", "industrial training", "how many internships",
+        "when is internship", "internship duration", "industrial project"
+      ],
+      "responses": [
+        "Internship & Training at GCECT IT:\n- Summer Internship 1: 2-4 weeks after Sem 2, evaluated in Sem 3\n- Summer Internship 2: 2-4 weeks after Sem 4, evaluated in Sem 5\n- Industrial Training: 4-6 weeks after Sem 6, evaluated in Sem 7\n- Sem 7 & 8: Project / Internship / Industrial Project (final evaluation)"
+      ]
+    },
+    {
+      "tag": "holiday",
+      "patterns": [
+        "holiday list", "holidays", "academic calendar", "vacation dates",
+        "when are holidays", "college holiday", "gcect holiday 2026",
+        "leave schedule", "academic schedule"
+      ],
+      "responses": [
+        "You can download the GCECT Holiday List here:\nhttps://gcect.ac.in/download/Miscellaneous/GCECT-Holiday-List-2026.pdf"
+      ]
+    },
+    {
+      "tag": "website",
+      "patterns": [
+        "gcect website", "official website", "college website", "gcect portal",
+        "gcect online", "gcect url", "college link"
+      ],
+      "responses": [
+        "Official GCECT Website: https://gcect.ac.in/"
+      ]
+    },
+    {
+      "tag": "contact",
+      "patterns": [
+        "contact details", "department email", "how to contact", "phone number",
+        "email id", "gcect contact", "it department contact", "reach department",
+        "contact it department"
+      ],
+      "responses": [
+        "IT Department Contact:\n- Email: gcect.it@gmail.com\n- Phone: 123456789\n- Address: Floor 3, Administrative Building, GCECT, Kolkata 700010\n- Website: https://gcect.ac.in/"
+      ]
+    },
+    {
+      "tag": "hostel",
+      "patterns": [
+        "hostel", "accommodation", "staying facility", "hostel facility",
+        "does gcect have hostel", "boarding", "hostel available"
+      ],
+      "responses": [
+        "For hostel and accommodation details, please contact the college office directly or visit https://gcect.ac.in/ as information is subject to updates."
+      ]
+    },
+    {
+      "tag": "course_structure",
+      "patterns": [
+        "course structure", "btech it curriculum", "it curriculum", "what is btech it",
+        "how many semesters", "total semesters", "course overview"
+      ],
+      "responses": [
+        "B.Tech IT at GCECT (Curriculum 2024-25 onwards) - 8 Semesters across 4 years:\n- Sem 1-2: Foundation (Maths, Physics, Chemistry, Programming)\n- Sem 3-4: Core IT (DSA, CO, DAA, FLAT, Computer Architecture)\n- Sem 5-6: Advanced IT (OS, DBMS, OOP, AI, Networks, Cyber Security)\n- Sem 7-8: Electives, Industrial Training, Projects & Viva\n- Internships after Sem 2, Sem 4, and Sem 6\n\nAsk about any specific semester for full details!"
+      ]
+    }
+  ]
+}

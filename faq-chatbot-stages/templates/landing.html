@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>GCECT IT Assistant — AI-Powered College Chatbot</title>
+  <meta name="description" content="Your intelligent AI assistant for GCECT IT Department. Get instant answers on subjects, fees, faculty, exams, placements and more." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/static/landing.css" />
+</head>
+<body>
+
+  <!-- ── CANVAS: particle field ─────────────────────────────── -->
+  <canvas id="particle-canvas"></canvas>
+
+  <!-- ── NAVBAR ─────────────────────────────────────────────── -->
+  <nav class="navbar" id="navbar">
+    <div class="nav-inner">
+      <div class="nav-logo">
+        <div class="logo-orb"></div>
+        <span class="logo-text">GCECT <span class="logo-accent">IT</span></span>
+      </div>
+      <ul class="nav-links">
+        <li><a href="#features">Features</a></li>
+        <li><a href="#topics">Topics</a></li>
+        <li><a href="#about">About</a></li>
+      </ul>
+      <a href="/chatbot" class="nav-cta">Launch Chat →</a>
+    </div>
+  </nav>
+
+  <!-- ── HERO ───────────────────────────────────────────────── -->
+  <section class="hero" id="hero">
+    <div class="hero-inner">
+
+      <!-- Left: text block -->
+      <div class="hero-text" id="hero-text">
+        <div class="badge" id="badge">
+          <span class="badge-dot"></span>
+          AI Assistant · GCECT IT Department
+        </div>
+
+        <h1 class="hero-title" id="hero-title">
+          Your Smart<br/>
+          <span class="gradient-word" id="typed-word">College Guide</span>
+        </h1>
+
+        <p class="hero-desc" id="hero-desc">
+          Ask anything about <strong>GCECT's IT Department</strong> — semester subjects,
+          exam schedules, faculty, fees, placements, clubs, and more.
+          Instant answers, any time.
+        </p>
+
+        <div class="hero-btns" id="hero-btns">
+          <a href="/chatbot" class="btn-primary" id="launch-btn">
+            <span class="btn-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+            </span>
+            Start Chatting
+            <span class="btn-arrow">→</span>
+          </a>
+          <a href="#features" class="btn-ghost">See What I Know</a>
+        </div>
+
+        <!-- Floating stat badges -->
+        <div class="stat-row" id="stat-row">
+          <div class="stat-badge"><span class="stat-num">53+</span> Topics Covered</div>
+          <div class="stat-badge"><span class="stat-num">8</span> Semesters</div>
+          <div class="stat-badge"><span class="stat-num">19+</span> Subjects</div>
+        </div>
+      </div>
+
+      <!-- Right: 3D bot orb -->
+      <div class="hero-visual" id="hero-visual">
+        <div class="orb-ring ring-3"></div>
+        <div class="orb-ring ring-2"></div>
+        <div class="orb-ring ring-1"></div>
+        <div class="orb-glow"></div>
+        <div class="orb-body" id="orb-body">
+          <!-- Bot face -->
+          <div class="bot-face">
+            <div class="bot-eye left"></div>
+            <div class="bot-eye right"></div>
+            <div class="bot-mouth"></div>
+          </div>
+          <div class="orb-shine"></div>
+        </div>
+
+        <!-- Floating message bubbles -->
+        <div class="float-bubble bubble-a" id="bubble-a">
+          <span>📚 3rd Sem Subjects?</span>
+        </div>
+        <div class="float-bubble bubble-b" id="bubble-b">
+          <span>🎓 HOD Details</span>
+        </div>
+        <div class="float-bubble bubble-c" id="bubble-c">
+          <span>💰 Fees & Scholarships</span>
+        </div>
+        <div class="float-bubble bubble-d" id="bubble-d">
+          <span>🏢 Placement Cell</span>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Scroll cue -->
+    <div class="scroll-cue" id="scroll-cue">
+      <div class="scroll-line"></div>
+      <span>Scroll to explore</span>
+    </div>
+  </section>
+
+  <!-- ── FEATURES ────────────────────────────────────────────── -->
+  <section class="section features-section" id="features">
+    <div class="section-inner">
+      <div class="section-tag reveal">Capabilities</div>
+      <h2 class="section-title reveal">What I can answer <span class="grad">instantly</span></h2>
+      <p class="section-sub reveal">Powered by a dual-engine: keyword knowledge-base + ML classifier</p>
+
+      <div class="features-grid">
+
+        <div class="feat-card reveal" style="--d:0ms">
+          <div class="feat-icon" style="--c1:#5b7fff;--c2:#8b5cf6">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01z"/></svg>
+          </div>
+          <h3>Semester Syllabus</h3>
+          <p>All 8 semesters with theory, labs, credits. Ask "3rd sem subjects" or "2nd year syllabus".</p>
+          <div class="feat-tags">
+            <span>Sem 1–8</span><span>Year-wise</span><span>Credits</span>
+          </div>
+        </div>
+
+        <div class="feat-card reveal" style="--d:80ms">
+          <div class="feat-icon" style="--c1:#06b6d4;--c2:#0ea5e9">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+          </div>
+          <h3>Subject Details</h3>
+          <p>Deep-dive into any subject — code, credits, L-T-P structure, full topic list.</p>
+          <div class="feat-tags">
+            <span>DSA</span><span>DBMS</span><span>OS</span><span>AI</span><span>+15</span>
+          </div>
+        </div>
+
+        <div class="feat-card reveal" style="--d:160ms">
+          <div class="feat-icon" style="--c1:#f59e0b;--c2:#ef4444">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+          </div>
+          <h3>Exam Info</h3>
+          <p>Timing (12–3 PM), schedule link, marks pattern — Mid-Sem, End-Sem, internal marks.</p>
+          <div class="feat-tags">
+            <span>Schedule</span><span>Pattern</span><span>Grading</span>
+          </div>
+        </div>
+
+        <div class="feat-card reveal" style="--d:240ms">
+          <div class="feat-icon" style="--c1:#10b981;--c2:#06b6d4">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+          </div>
+          <h3>Faculty & HOD</h3>
+          <p>HOD name, room number, faculty list link and department office hours.</p>
+          <div class="feat-tags">
+            <span>HOD</span><span>Faculty</span><span>Office</span>
+          </div>
+        </div>
+
+        <div class="feat-card reveal" style="--d:320ms">
+          <div class="feat-icon" style="--c1:#8b5cf6;--c2:#ec4899">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+          </div>
+          <h3>Fees & Scholarships</h3>
+          <p>Annual fee (₹13,200), Student Freeship and SVMCM scholarship info.</p>
+          <div class="feat-tags">
+            <span>Tuition</span><span>SVMCM</span><span>Freeship</span>
+          </div>
+        </div>
+
+        <div class="feat-card reveal" style="--d:400ms">
+          <div class="feat-icon" style="--c1:#f59e0b;--c2:#10b981">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
+          </div>
+          <h3>Placement & Internship</h3>
+          <p>Placement cell link, internship structure (after Sem 2, 4, 6) and industrial training.</p>
+          <div class="feat-tags">
+            <span>Campus</span><span>Internship</span><span>Training</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ── TOPICS TICKER ───────────────────────────────────────── -->
+  <section class="topics-ticker-section" id="topics">
+    <div class="ticker-label">Ask me about →</div>
+    <div class="ticker-track" id="ticker-track">
+      <div class="ticker-inner" id="ticker-inner">
+        <span>Operating Systems</span><span>•</span>
+        <span>DBMS Topics</span><span>•</span>
+        <span>HOD Details</span><span>•</span>
+        <span>Exam Schedule</span><span>•</span>
+        <span>DSA Syllabus</span><span>•</span>
+        <span>College Address</span><span>•</span>
+        <span>Placement Cell</span><span>•</span>
+        <span>Bytemonk Club</span><span>•</span>
+        <span>Fee Structure</span><span>•</span>
+        <span>SVMCM Scholarship</span><span>•</span>
+        <span>5th Semester</span><span>•</span>
+        <span>Artificial Intelligence</span><span>•</span>
+        <span>Automata Theory</span><span>•</span>
+        <span>Lab Timings</span><span>•</span>
+        <span>Admission Docs</span><span>•</span>
+        <span>Computer Networks</span><span>•</span>
+        <span>Cyber Security</span><span>•</span>
+        <span>Industrial Training</span><span>•</span>
+        <!-- duplicate for seamless loop -->
+        <span>Operating Systems</span><span>•</span>
+        <span>DBMS Topics</span><span>•</span>
+        <span>HOD Details</span><span>•</span>
+        <span>Exam Schedule</span><span>•</span>
+        <span>DSA Syllabus</span><span>•</span>
+        <span>College Address</span><span>•</span>
+        <span>Placement Cell</span><span>•</span>
+        <span>Bytemonk Club</span><span>•</span>
+        <span>Fee Structure</span><span>•</span>
+        <span>SVMCM Scholarship</span><span>•</span>
+        <span>5th Semester</span><span>•</span>
+        <span>Artificial Intelligence</span><span>•</span>
+        <span>Automata Theory</span><span>•</span>
+        <span>Lab Timings</span><span>•</span>
+        <span>Admission Docs</span><span>•</span>
+        <span>Computer Networks</span><span>•</span>
+        <span>Cyber Security</span><span>•</span>
+        <span>Industrial Training</span><span>•</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── HOW IT WORKS ────────────────────────────────────────── -->
+  <section class="section how-section" id="about">
+    <div class="section-inner">
+      <div class="section-tag reveal">Under the Hood</div>
+      <h2 class="section-title reveal">How the AI <span class="grad">works</span></h2>
+
+      <div class="steps-row">
+        <div class="step reveal" style="--d:0ms">
+          <div class="step-num">01</div>
+          <div class="step-content">
+            <h3>Knowledge Base</h3>
+            <p>Keyword + phrase scoring across 24 FAQ entries with stemming and spell-correction for precise, instant answers.</p>
+          </div>
+        </div>
+        <div class="step-arrow reveal" style="--d:100ms">→</div>
+        <div class="step reveal" style="--d:200ms">
+          <div class="step-num">02</div>
+          <div class="step-content">
+            <h3>Subject & Semester Parser</h3>
+            <p>Detects specific subjects (DSA, OS, DBMS…) and semester/year references, serving rich structured answers.</p>
+          </div>
+        </div>
+        <div class="step-arrow reveal" style="--d:300ms">→</div>
+        <div class="step reveal" style="--d:400ms">
+          <div class="step-num">03</div>
+          <div class="step-content">
+            <h3>ML Classifier Fallback</h3>
+            <p>TF-IDF + Logistic Regression trained on 53 intents handles conversational queries the knowledge base doesn't catch.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── CTA BANNER ─────────────────────────────────────────── -->
+  <section class="cta-section reveal">
+    <div class="cta-inner">
+      <div class="cta-glow"></div>
+      <h2>Ready to ask your first question?</h2>
+      <p>No signup, no wait — just type and get answers instantly.</p>
+      <a href="/chatbot" class="btn-primary large">
+        <span class="btn-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+        </span>
+        Open the Chatbot
+        <span class="btn-arrow">→</span>
+      </a>
+    </div>
+  </section>
+
+  <!-- ── FOOTER ──────────────────────────────────────────────── -->
+  <footer class="footer">
+    <div class="footer-inner">
+      <div class="footer-logo">
+        <div class="logo-orb small"></div>
+        <span>GCECT IT Assistant</span>
+      </div>
+      <p class="footer-copy">Government College of Engineering &amp; Ceramic Technology · IT Department · Kolkata</p>
+      <div class="footer-links">
+        <a href="https://gcect.ac.in/" target="_blank" rel="noopener">Official Website</a>
+        <a href="/chatbot">Open Chatbot</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="/static/landing.js"></script>
+</body>
+</html>

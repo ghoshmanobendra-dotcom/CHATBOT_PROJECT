@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>GCECT IT Assistant — Knowledge Opens</title>
+  <meta name="description" content="GCECT IT Department AI Assistant — Your gateway to every answer about subjects, faculty, fees, exams, placements and more." />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --col-bg:   #05070d;
+      --col-text: #f2f4f8;
+      --sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    }
+
+    html, body {
+      width: 100%; height: 100%;
+      background: var(--col-bg);
+      font-family: var(--sans);
+      overscroll-behavior: none;
+    }
+
+    /* ── Hero section ───────────────────────────────────── */
+    #hero {
+      position: relative;
+      height: 100dvh;
+      width: 100%;
+      overflow: hidden;
+      background: var(--col-bg);
+      touch-action: none;
+    }
+
+    /* ── Video ──────────────────────────────────────────── */
+    #hero-video {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      opacity: 0;
+      transform-origin: center center;
+      will-change: transform;
+      transition: opacity 0.6s ease;
+      touch-action: none;
+      pointer-events: none;
+    }
+    #hero-video.ready { opacity: 1; }
+
+    /* ── Gradient overlay ───────────────────────────────── */
+    #hero-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(
+        180deg,
+        rgba(5,7,13,0.38) 0%,
+        rgba(5,7,13,0)    30%,
+        rgba(5,7,13,0.12) 70%,
+        rgba(5,7,13,0.6)  100%
+      );
+      pointer-events: none;
+    }
+
+    /* ── Main title ─────────────────────────────────────── */
+    #hero-title {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0 6%;
+      text-align: center;
+      pointer-events: none;
+      will-change: transform, filter, opacity;
+    }
+    #hero-title span {
+      font-weight: 800;
+      font-size: clamp(28px, 6.8vw, 92px);
+      line-height: 1;
+      letter-spacing: -0.025em;
+      color: var(--col-text);
+      text-shadow: 0 4px 30px rgba(0,0,0,0.55);
+      display: inline-block;
+    }
+
+    /* ── Tagline ────────────────────────────────────────── */
+    #hero-tagline {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 20px;
+      padding: 0 8%;
+      text-align: center;
+      opacity: 0;
+      pointer-events: none;
+      will-change: transform, filter, opacity;
+    }
+    #hero-tagline .tl-main {
+      font-weight: 700;
+      font-size: clamp(20px, 3.2vw, 42px);
+      line-height: 1.2;
+      letter-spacing: -0.015em;
+      color: var(--col-text);
+      text-shadow: 0 4px 24px rgba(0,0,0,0.55);
+    }
+    #hero-tagline .tl-sub {
+      font-weight: 500;
+      font-size: clamp(13px, 1.6vw, 20px);
+      color: rgba(220, 228, 248, 0.7);
+      letter-spacing: 0.02em;
+    }
+    #hero-tagline .tl-btn {
+      margin-top: 12px;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 14px 32px;
+      background: linear-gradient(135deg, #5b7fff, #8b5cf6);
+      border-radius: 14px;
+      color: #fff;
+      font-weight: 700;
+      font-size: clamp(14px, 1.6vw, 18px);
+      letter-spacing: 0.01em;
+      text-decoration: none;
+      box-shadow: 0 6px 28px rgba(91,127,255,0.45);
+      pointer-events: auto;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    #hero-tagline .tl-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 36px rgba(91,127,255,0.55);
+    }
+    #hero-tagline .tl-btn svg {
+      width: 20px; height: 20px; flex-shrink: 0;
+    }
+
+    /* ── Scroll hint ────────────────────────────────────── */
+    #hero-hint {
+      position: absolute;
+      left: 50%;
+      bottom: clamp(22px, 6vh, 50px);
+      transform: translateX(-50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      color: rgba(240,244,248,0.72);
+      font-size: clamp(10px, 1.3vw, 12px);
+      font-weight: 600;
+      letter-spacing: 0.3em;
+      transition: opacity 0.4s ease;
+      pointer-events: none;
+    }
+
+    /* Scroll arrow bounce */
+    @keyframes bounce-arrow {
+      0%, 100% { transform: translateY(0);   opacity: 0.5; }
+      50%       { transform: translateY(6px); opacity: 1;   }
+    }
+    #hero-hint svg { animation: bounce-arrow 1.6s ease-in-out infinite; }
+
+    /* ── Progress bar ───────────────────────────────────── */
+    #hero-progress-track {
+      position: absolute;
+      left: 0; right: 0; bottom: 0;
+      height: 2px;
+      background: rgba(255,255,255,0.1);
+    }
+    #hero-progress-fill {
+      height: 100%;
+      width: 100%;
+      background: linear-gradient(90deg, rgba(255,255,255,0.45), rgba(255,255,255,0.95));
+      transform: scaleX(0);
+      transform-origin: left center;
+      will-change: transform;
+    }
+
+    /* ── Dept badge (top-left) ──────────────────────────── */
+    #hero-badge {
+      position: absolute;
+      top: clamp(16px, 2.5vw, 28px);
+      left: clamp(16px, 2.5vw, 28px);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: rgba(8,11,24,0.65);
+      backdrop-filter: blur(14px);
+      border: 1px solid rgba(91,127,255,0.28);
+      border-radius: 12px;
+      padding: 10px 16px;
+      z-index: 5;
+    }
+    #hero-badge .orb {
+      width: 28px; height: 28px;
+      border-radius: 8px;
+      background: linear-gradient(135deg, #5b7fff, #8b5cf6);
+      flex-shrink: 0;
+    }
+    #hero-badge .badge-text {
+      display: flex;
+      flex-direction: column;
+    }
+    #hero-badge .badge-name {
+      font-weight: 700;
+      font-size: 13px;
+      color: var(--col-text);
+      letter-spacing: -0.01em;
+    }
+    #hero-badge .badge-sub {
+      font-size: 10.5px;
+      color: rgba(190,200,230,0.65);
+      font-weight: 500;
+      letter-spacing: 0.01em;
+    }
+
+    /* ── Signature (bottom-right) ───────────────────────── */
+
+
+    /* ── Loader (shown before video is ready) ───────────── */
+    #hero-loader {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      pointer-events: none;
+      z-index: 10;
+      transition: opacity 0.5s ease;
+    }
+    #hero-loader.hidden { opacity: 0; }
+    .loader-ring {
+      width: 44px; height: 44px;
+      border: 2px solid rgba(255,255,255,0.1);
+      border-top-color: rgba(91,127,255,0.8);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+  </style>
+</head>
+<body>
+
+  <section id="hero">
+
+    <!-- Loader -->
+    <div id="hero-loader">
+      <div class="loader-ring"></div>
+    </div>
+
+    <!-- Video -->
+    <video
+      id="hero-video"
+      src="https://cdn.21st.dev/assets/mirror/21/21a77eac28eacbb7e142016eefeaa0b4a766619e51113629a3bc6df6af066c0f.mp4"
+      muted
+      playsinline
+      preload="auto"
+    ></video>
+
+    <!-- Gradient overlay -->
+    <div id="hero-overlay"></div>
+
+    <!-- Dept badge -->
+    <div id="hero-badge">
+      <div class="orb"></div>
+      <div class="badge-text">
+        <span class="badge-name">GCECT IT</span>
+        <span class="badge-sub">Dept. of Information Technology</span>
+      </div>
+    </div>
+
+    <!-- Main title -->
+    <div id="hero-title">
+      <span>KNOWLEDGE OPENS</span>
+    </div>
+
+    <!-- Tagline (shown at end of scrub) -->
+    <div id="hero-tagline">
+      <span class="tl-main">Every answer about GCECT<br/>is already within reach.</span>
+      <span class="tl-sub">
+        AI-powered · 53+ topics · Subjects, Faculty, Fees, Placements &amp; more
+      </span>
+      <a href="/landing" class="tl-btn" id="enter-btn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+        </svg>
+        Enter the Assistant
+      </a>
+    </div>
+
+    <!-- Scroll hint -->
+    <div id="hero-hint">
+      <span>SCROLL</span>
+      <svg width="14" height="18" viewBox="0 0 14 18" fill="none">
+        <path d="M7 1L7 17M2 12L7 17L12 12" stroke="currentColor" stroke-width="1.5"
+              stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </div>
+
+    <!-- Progress bar -->
+    <div id="hero-progress-track">
+      <div id="hero-progress-fill"></div>
+    </div>
+
+
+
+  </section>
+
+  <script>
+  /* ================================================================
+     GCECT IT — Scroll-Locked Video Hero (vanilla JS port of TSX)
+     Technique: body pinned with position:fixed (same as modal libs)
+     Input: wheel + touch → video.currentTime, RAF interpolation
+     Unlock: when progress ≥ 1 + user keeps scrolling → /landing
+  ================================================================ */
+  (function () {
+    'use strict';
+
+    // ── Elements ──────────────────────────────────────────────────
+    const video       = document.getElementById('hero-video');
+    const title       = document.getElementById('hero-title');
+    const hint        = document.getElementById('hero-hint');
+    const tagline     = document.getElementById('hero-tagline');
+    const progFill    = document.getElementById('hero-progress-fill');
+    const loader      = document.getElementById('hero-loader');
+    const enterBtn    = document.getElementById('enter-btn');
+
+    // ── Config ────────────────────────────────────────────────────
+    /** Total px of input needed to scrub the full video. */
+    const SCRUB_DISTANCE = 3200;
+    /** Extra px of forward input after video ends before we unlock. */
+    const EXIT_THRESHOLD = 320;
+
+    // ── State ─────────────────────────────────────────────────────
+    let duration          = 0;
+    let targetProgress    = 0;
+    let currentProgress   = 0;
+    let rafId             = 0;
+    let hasStartedScrolling = false;
+    let isSeeking         = false;
+    let pendingTime       = null;
+    let locked            = false;
+    let lockedScrollY     = 0;
+    let touchStartY       = 0;
+    let overflowAccum     = 0;   // accumulates input past progress=1
+    let exiting           = false;
+
+    // Respect reduced motion
+    const reduceMotion = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
+
+    // ── Scroll-lock ───────────────────────────────────────────────
+    // Same bulletproof technique modal libraries use.
+    function engageLock() {
+      if (locked) return;
+      locked = true;
+      lockedScrollY = window.scrollY;
+      const s = document.body.style;
+      s.position        = 'fixed';
+      s.top             = `-${lockedScrollY}px`;
+      s.left            = '0';
+      s.right           = '0';
+      s.width           = '100%';
+      s.height          = '100%';
+      s.overscrollBehavior = 'none';
+    }
+
+    function releaseLock() {
+      if (!locked) return;
+      locked = false;
+      const y = lockedScrollY;
+      const s = document.body.style;
+      s.position = s.top = s.left = s.right = s.width = s.height = s.overscrollBehavior = '';
+      window.scrollTo(0, y);
+    }
+
+    // ── Seek queue ────────────────────────────────────────────────
+    // Browsers throttle seek calls — queue the next one.
+    function seekTo(t) {
+      if (isSeeking) { pendingTime = t; return; }
+      isSeeking = true;
+      video.currentTime = t;
+    }
+    video.addEventListener('seeked', function () {
+      isSeeking = false;
+      if (pendingTime !== null) {
+        const t = pendingTime;
+        pendingTime = null;
+        isSeeking = true;
+        video.currentTime = t;
+      }
+    });
+
+    // ── Video ready ───────────────────────────────────────────────
+    video.addEventListener('loadeddata', function () {
+      duration = video.duration || 0;
+      video.classList.add('ready');
+      loader.classList.add('hidden');
+      if (reduceMotion) video.currentTime = duration * 0.92;
+    });
+
+    // iOS Safari won't buffer until play() is called — kick it.
+    (function kickstart() {
+      const p = video.play();
+      if (p && p.then) p.then(() => video.pause()).catch(() => {});
+      else video.pause();
+    })();
+
+    // ── clamp helper ──────────────────────────────────────────────
+    function clamp(v, min, max) { return Math.min(max, Math.max(min, v)); }
+
+    // ── Input handlers ────────────────────────────────────────────
+    function addDelta(deltaY) {
+      if (exiting) return;
+
+      const next = clamp(targetProgress + deltaY / SCRUB_DISTANCE, 0, 1);
+      targetProgress = next;
+      if (targetProgress > 0.001) hasStartedScrolling = true;
+
+      // Accumulate overflow once video has ended
+      if (targetProgress >= 0.9999 && deltaY > 0) {
+        overflowAccum += deltaY;
+        if (overflowAccum >= EXIT_THRESHOLD) {
+          triggerExit();
+        }
+      }
+      // Reset accumulator if scrolling back
+      if (deltaY < 0) overflowAccum = 0;
+    }
+
+    const onWheel = function (e) {
+      addDelta(e.deltaY);
+      e.preventDefault();
+    };
+
+    const onTouchStart = function (e) {
+      touchStartY = e.touches[0]?.clientY ?? 0;
+    };
+    const onTouchMove = function (e) {
+      const y = e.touches[0]?.clientY ?? touchStartY;
+      const deltaY = touchStartY - y;
+      touchStartY = y;
+      addDelta(deltaY);
+      e.preventDefault();
+    };
+
+    window.addEventListener('wheel',      onWheel,      { passive: false });
+    window.addEventListener('touchstart', onTouchStart, { passive: true  });
+    window.addEventListener('touchmove',  onTouchMove,  { passive: false });
+
+    // Extra binding on the section itself — iOS Safari can lose the
+    // window-level listener to native scroll handling.
+    const hero = document.getElementById('hero');
+    hero.addEventListener('touchstart', onTouchStart, { passive: true,  capture: true });
+    hero.addEventListener('touchmove',  onTouchMove,  { passive: false, capture: true });
+
+    // ── Exit / unlock ─────────────────────────────────────────────
+    function triggerExit() {
+      if (exiting) return;
+      exiting = true;
+
+      // Fade out entire hero, then navigate
+      hero.style.transition = 'opacity 0.45s ease';
+      hero.style.opacity = '0';
+
+      // Clean up listeners
+      window.removeEventListener('wheel',      onWheel);
+      window.removeEventListener('touchstart', onTouchStart);
+      window.removeEventListener('touchmove',  onTouchMove);
+      hero.removeEventListener('touchstart', onTouchStart, true);
+      hero.removeEventListener('touchmove',  onTouchMove,  true);
+      cancelAnimationFrame(rafId);
+
+      setTimeout(function () {
+        releaseLock();
+        window.location.href = '/landing';
+      }, 460);
+    }
+
+    // Enter button can also trigger exit
+    if (enterBtn) {
+      enterBtn.addEventListener('click', function (e) {
+        e.preventDefault();
+        triggerExit();
+      });
+    }
+
+    // ── RAF render loop ───────────────────────────────────────────
+    function frame() {
+      // Smooth interpolation (exponential ease)
+      currentProgress += (targetProgress - currentProgress) * 0.18;
+
+      // Seek video
+      if (duration > 0) {
+        seekTo(currentProgress * duration);
+      }
+
+      // Video subtle zoom
+      video.style.transform = `scale(${1 + currentProgress * 0.065})`;
+
+      // Title: fade out & blur as scroll begins (0→35%)
+      const titleT = 1 - clamp(currentProgress / 0.35, 0, 1);
+      title.style.opacity   = titleT;
+      title.style.transform = `translateY(${(1 - titleT) * -26}px) scale(${0.96 + titleT * 0.04})`;
+      title.style.filter    = `blur(${(1 - titleT) * 11}px)`;
+
+      // Hint: hide after first scroll
+      hint.style.opacity = hasStartedScrolling ? '0' : '1';
+
+      // Tagline: fade in as video nears end (82%→100%)
+      const tagT = clamp((currentProgress - 0.82) / 0.18, 0, 1);
+      tagline.style.opacity   = tagT;
+      tagline.style.transform = `translateY(${(1 - tagT) * 22}px) scale(${0.97 + tagT * 0.03})`;
+      tagline.style.filter    = `blur(${(1 - tagT) * 9}px)`;
+
+      // Progress bar
+      progFill.style.transform = `scaleX(${currentProgress})`;
+
+      rafId = requestAnimationFrame(frame);
+    }
+
+    // ── Boot ──────────────────────────────────────────────────────
+    engageLock();
+    if (!reduceMotion) {
+      rafId = requestAnimationFrame(frame);
+    } else {
+      // Reduced motion: skip straight to end state
+      tagline.style.opacity = '1';
+      tagline.style.transform = '';
+      tagline.style.filter = '';
+      title.style.opacity = '0';
+      progFill.style.transform = 'scaleX(1)';
+    }
+
+  })();
+  </script>
+</body>
+</html>
