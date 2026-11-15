@@ -1,31 +1,42 @@
 """
 Stage 8 — GCECT IT Department Chatbot (Web Interface)
 ======================================================
-This module wraps the full Stage-2 knowledge-base logic (keyword scoring,
-syllabus parsing, individual-subject lookup) inside a Flask web app.
+This module wraps the full knowledge-base logic (keyword scoring,
+syllabus parsing, individual-subject lookup) inside a Flask web app,
+and adds OOP exam prep mode powered by oops_engine.py.
 
 Architecture:
     Browser (index.html + JS)
         -> POST /chat  {"message": "..."}
         -> Flask route in this file
         -> Knowledge-base engine (keyword + phrase scoring,
-           subject lookup, semester detection)
-        -> JSON response {"response": "..."}
+           subject lookup, semester detection)  OR  OopsEngine
+        -> JSON response {"type": ..., ...}
         -> JS updates the chat window
 
 Run:
     pip install flask scikit-learn
-    python stage8_app.py
+    FLASK_SECRET_KEY=<your-key> python stage8_app.py
 Then open http://127.0.0.1:5000 in your browser.
 """
 
+import os
 import re
 import json
 import random
 import difflib
-from flask import Flask, render_template, request, jsonify
+import warnings
+from datetime import datetime
+from flask import Flask, render_template, request, jsonify, session
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.linear_model import LogisticRegression
+
+# =========================================================
+# EDITABLE COLLEGE CONFIG — update these before deployment
+# =========================================================
+PLACEHOLDER_PHONE = "123456789"
+COLLEGE_PHONE = os.environ.get("COLLEGE_PHONE", PLACEHOLDER_PHONE)
+COLLEGE_FEES  = os.environ.get("COLLEGE_FEES",  "Rs. 13,200")
 
 # -----------------------------------------------------------------------
 # COLLEGE DATA  (all details for GCECT IT Department)
@@ -54,7 +65,7 @@ INFO = {
     "faculty_link":   "https://gcect.ac.in/department-of-information-technology/",
     "placement_link": "https://gcect.ac.in/training-placement-dept-of-it/",
     "holiday_link":   "https://gcect.ac.in/download/Miscellaneous/GCECT-Holiday-List-2026.pdf",
-    "fees":           "Rs. 13,200",
+    "fees":           COLLEGE_FEES,
     "scholarships":   "Student Freeship and SVMCM (Swami Vivekananda Merit cum Means Scholarship)",
     "clubs":          "Bytemonk (IT technical club)",
     "admission_docs": (
@@ -62,8 +73,18 @@ INFO = {
         "Class 10 and Class 12 marksheets, caste certificate, income certificate"
     ),
     "email": "gcect.it@gmail.com",
-    "phone": "123456789",
+    "phone": COLLEGE_PHONE,
 }
+
+# =========================================================
+# STARTUP WARNINGS
+# =========================================================
+if INFO["phone"] == PLACEHOLDER_PHONE:
+    warnings.warn(
+        "⚠️  INFO['phone'] is still the placeholder '123456789'. "
+        "Update it via the COLLEGE_PHONE environment variable before deployment.",
+        stacklevel=2,
+    )
 
 # Semester-wise course structure
 SYLLABUS = {
@@ -154,7 +175,9 @@ SYLLABUS = {
     },
 }
 
-# Individual subject details (Sem 3–5 with full topic coverage)
+# Individual subject details (Sem 3–6 with topic coverage)
+_SEM6_TOPICS_NOTE = "Topics: not yet available (detailed syllabus provided up to Semester 5 only)."
+
 SUBJECTS = [
     {
         "name": "Mathematics-III", "code": "BS(IT)307", "sem": 3,
@@ -306,34 +329,25 @@ SUBJECTS = [
             "generative AI tools and applications."
         ),
     },
+    # ---- Semester 6 (topics TBD beyond Semester 5) ----
     {
-        "name": "Computer Networks", "code": "PC(IT)601", "sem": 6,
+        "name": "Computer Networks", "code": "PC(IT)618", "sem": 6,
         "credits": 4, "ltp": "3-1-0",
         "aliases": ["computer networks", "cn", "networking"],
-        "topics": (
-            "OSI and TCP/IP model; routing and switching algorithms; "
-            "transport protocols (TCP, UDP); network security; "
-            "wireless and cellular networking."
-        ),
+        "topics": _SEM6_TOPICS_NOTE,
     },
     {
-        "name": "Software Engineering", "code": "PC(IT)603", "sem": 6,
-        "credits": 4, "ltp": "3-1-0",
+        "name": "Software Engineering", "code": "PC(IT)620", "sem": 6,
+        "credits": 3, "ltp": "3-0-0",
         "aliases": ["software engineering", "se"],
-        "topics": (
-            "SDLC models (Agile, Waterfall, Spiral); requirements engineering; "
-            "design patterns; testing strategies; project management; UML."
-        ),
+        "topics": _SEM6_TOPICS_NOTE,
     },
     {
-        "name": "Introduction to Cyber Security", "code": "PC(IT)604", "sem": 6,
+        "name": "Introduction to Cyber Security", "code": "PC(IT)621", "sem": 6,
         "credits": 3, "ltp": "3-0-0",
         "aliases": ["cyber security", "cybersecurity", "information security",
                     "intro to cyber security"],
-        "topics": (
-            "Cryptography; network security; ethical hacking basics; "
-            "firewalls; intrusion detection; security protocols; cyber laws."
-        ),
+        "topics": _SEM6_TOPICS_NOTE,
     },
 ]
 
@@ -372,7 +386,8 @@ FAQ = [
         "phrases": ["good morning", "good afternoon", "good evening"],
         "answer": (
             "Hello! I'm the {short_name} {dept} Department assistant. "
-            "Ask me anything about GCECT — subjects, fees, exams, placements, and more!"
+            "Ask me anything about GCECT — subjects, fees, exams, placements, and more! "
+            "Type 'oops quiz' to start Java OOP exam prep."
         ),
     },
     {
@@ -500,7 +515,7 @@ FAQ = [
         "topic": "Fees",
         "keywords": {"fee", "tuition", "cost", "payment", "charge"},
         "phrases": ["how much", "fee structure"],
-        "answer": "Annual tuition fee (B.Tech IT): {fees}. Please confirm the latest details with the office.",
+        "answer": "Fees: {fees}. Please confirm the latest details with the office.",
     },
     {
         "topic": "Scholarships",
@@ -520,11 +535,7 @@ FAQ = [
         "keywords": {"club", "fest", "technical", "bytemonk", "event",
                      "society", "activity", "coding", "hackathon"},
         "phrases": ["tech fest", "technical club", "coding club", "bytemonk club"],
-        "answer": (
-            "Technical club: {clubs}.\n"
-            "Bytemonk organizes coding contests, workshops, hackathons, "
-            "and tech events for IT students."
-        ),
+        "answer": "Technical club: {clubs}.",
     },
     {
         "topic": "Hostel",
@@ -598,6 +609,12 @@ ORDINALS = {
 }
 NUM = r"(\d|first|second|third|fourth|fifth|sixth|seventh|eighth)"
 
+SHORT_ALIAS_THRESHOLD  = 3   # max tokens for whole-message short-alias match
+SUBJECT_CONTEXT_WORDS  = {
+    "topic", "subject", "syllabus", "course", "paper",
+    "marks", "credit", "teach", "study", "chapter",
+}
+
 
 def to_number(token: str) -> int:
     return int(token) if token.isdigit() else ORDINALS[token]
@@ -640,11 +657,20 @@ def syllabus_answer(question: str):
 def find_subject(question: str):
     """Return the SUBJECTS entry best matching the question (longest alias wins)."""
     stemmed = stem_text(question)
+    tokens = stemmed.split()
     best, best_len = None, 0
     for subject in SUBJECTS:
         for alias in subject["aliases"]:
             a = stem_text(alias)
-            if len(a) > best_len and re.search(r"\b" + re.escape(a) + r"\b", stemmed):
+            alias_word_count = len(a.split())
+            if not re.search(r"\b" + re.escape(a) + r"\b", stemmed):
+                continue
+            if alias_word_count <= 2:   # short alias guard
+                has_context = bool(SUBJECT_CONTEXT_WORDS & set(tokens))
+                is_short_msg = len(tokens) <= SHORT_ALIAS_THRESHOLD
+                if not has_context and not is_short_msg:
+                    continue
+            if len(a) > best_len:
                 best, best_len = subject, len(a)
     return best
 
@@ -661,7 +687,12 @@ def subject_answer(subject: dict) -> str:
 # -----------------------------------------------------------------------
 # ML CLASSIFIER  (TF-IDF + Logistic Regression on intents.json)
 # -----------------------------------------------------------------------
-with open("intents.json", "r", encoding="utf-8") as _f:
+_HERE = os.path.dirname(os.path.abspath(__file__))
+_UNANSWERED_LOG = os.path.join(_HERE, "unanswered_questions.txt")
+
+ML_CONFIDENCE_THRESHOLD = 0.45  # tune here
+
+with open(os.path.join(_HERE, "intents.json"), "r", encoding="utf-8") as _f:
     _data = json.load(_f)
 
 _sentences, _labels, _responses = [], [], {}
@@ -678,10 +709,25 @@ _clf = LogisticRegression(max_iter=1000)
 _clf.fit(_X, _labels)
 
 
+def _log_unanswered(question: str):
+    """Append an unanswered question to the log file with a timestamp."""
+    with open(_UNANSWERED_LOG, "a", encoding="utf-8") as f:
+        f.write(f"[{datetime.now().isoformat()}] {question}\n")
+
+
 def ml_response(question: str) -> str:
-    """Return the ML-picked intent response."""
+    """Return the ML-picked intent response, with confidence gating."""
     vec = _vectorizer.transform([question])
-    tag = _clf.predict(vec)[0]
+    proba = _clf.predict_proba(vec)[0]
+    best_idx = proba.argmax()
+    if proba[best_idx] < ML_CONFIDENCE_THRESHOLD:
+        _log_unanswered(question)
+        return (
+            "I'm not sure I understand that. Could you rephrase? "
+            "Ask about subjects, fees, faculty, exams, placements, "
+            "or type 'oops quiz' to start Java exam prep!"
+        )
+    tag = _clf.classes_[best_idx]
     return random.choice(_responses[tag])
 
 
@@ -719,10 +765,15 @@ def kb_find_answer(question: str):
     if best == 0:
         return "none", None
 
+    # 3) Tie handling: "Did you mean" prompt
     winners = [e for s, e in scored if s == best]
+    if len(winners) > 1:
+        topics = " / ".join(w["topic"] for w in winners[:3])
+        return "answer", f"Did you mean: {topics}? Please be more specific!"
+
     entry = winners[0]
 
-    # 3) Detailed semester answer if syllabus topic triggered
+    # 4) Detailed semester answer if syllabus topic triggered
     if entry["topic"] == "Syllabus and subjects":
         special = syllabus_answer(question)
         if special:
@@ -732,18 +783,300 @@ def kb_find_answer(question: str):
 
 
 # -----------------------------------------------------------------------
+# OOP ENGINE — optional import (oops_bank.json may not exist yet)
+# -----------------------------------------------------------------------
+_oops_engine = None
+
+try:
+    from oops_engine import OopsEngine as _OopsEngine
+
+    _BANK_PATH = os.path.join(_HERE, "oops_bank.json")
+    if os.path.exists(_BANK_PATH):
+        _oops_engine = _OopsEngine(_BANK_PATH)
+    else:
+        warnings.warn(
+            "oops_bank.json not found — OOP exam prep mode is disabled.",
+            stacklevel=2,
+        )
+except ImportError:
+    warnings.warn(
+        "oops_engine.py not found — OOP exam prep mode is disabled.",
+        stacklevel=2,
+    )
+
+# -----------------------------------------------------------------------
+# OOP INTENT DETECTION
+# -----------------------------------------------------------------------
+OOP_INTENT_KEYWORDS = {
+    "quiz", "quizz", "practice", "question", "questions", "important",
+    "prepare", "preparation", "mock", "test", "exam", "revise", "revision",
+    "learn", "study", "hard", "easy", "medium", "topic", "topics",
+}
+OOP_SUBJECT_KEYWORDS = {
+    "java", "oop", "oops", "object", "oriented", "inheritance",
+    "polymorphism", "encapsulation", "abstraction", "interface", "abstract",
+    "exception", "thread", "multithreading", "applet", "class", "method",
+    "overload", "override", "constructor", "package", "extends", "implements",
+}
+
+# Topic-to-module mapping for direct topic requests
+TOPIC_TO_MODULE = {
+    "multithreading": 5, "thread": 5,
+    "inheritance": 3, "polymorphism": 3, "interface": 3, "abstract": 3, "package": 3,
+    "exception": 4, "try": 4, "catch": 4,
+    "applet": 6,
+    "class": 2, "object": 2, "constructor": 2, "overload": 2, "array": 2,
+    "oop": 1, "oops": 1, "encapsulation": 1, "abstraction": 1,
+}
+
+
+def detect_oops_intent(message: str) -> bool:
+    """True if message is asking for OOP exam preparation (not just info)."""
+    lowered = message.lower()
+
+    # "oops syllabus" / "java syllabus" -> subject info, NOT prep mode
+    if re.search(r"\b(oop|oops|java)\s+syllabus\b", lowered):
+        return False
+
+    words = set(re.findall(r"[a-z]+", lowered))
+    has_oop_subject = bool(words & OOP_SUBJECT_KEYWORDS)
+    has_intent = bool(words & OOP_INTENT_KEYWORDS)
+
+    if has_oop_subject and has_intent:
+        return True
+
+    # Explicit phrase patterns
+    patterns = [
+        r"\boops?\s+(quiz|practice|exam|test|mock|question|prep)",
+        r"\bjava\s+(quiz|practice|exam|test|mock|question|prep)",
+        r"\b(quiz|practice|mock)\s+on\s+\w+",
+        r"\b(hard|easy|medium)\s+questions?\s+on\s+\w+",
+        r"\bimportant\s+questions?\s+(on|for|about)\s+\w+",
+    ]
+    return any(re.search(p, lowered) for p in patterns)
+
+
+def _parse_level(message: str) -> str | None:
+    """Extract difficulty level from message."""
+    lowered = message.lower()
+    for lvl in ("hard", "medium", "easy"):
+        if lvl in lowered:
+            return lvl
+    return None
+
+
+def _parse_module(message: str) -> int | None:
+    """Extract OOP module number from message topic keywords."""
+    lowered = message.lower()
+    for kw, mod in TOPIC_TO_MODULE.items():
+        if re.search(r"\b" + re.escape(kw) + r"\b", lowered):
+            return mod
+    return None
+
+
+# -----------------------------------------------------------------------
 # FLASK APP
 # -----------------------------------------------------------------------
+
+# Config
+MAX_MESSAGE_LENGTH = 500
+
 app = Flask(__name__)
+app.secret_key = os.environ.get("FLASK_SECRET_KEY", "gcect-oops-dev-key-change-in-prod")
 
 
-def get_response(question: str) -> str:
-    kind, payload = kb_find_answer(question)
+# -----------------------------------------------------------------------
+# RESPONSE HELPERS
+# -----------------------------------------------------------------------
+
+def _text_response(text: str) -> dict:
+    return {"type": "text", "text": text}
+
+
+def _oops_unavailable() -> dict:
+    return _text_response(
+        "OOP exam prep mode is not available right now "
+        "(question bank not loaded). "
+        "Ask me about GCECT subjects, fees, faculty, or exams instead!"
+    )
+
+
+def _oops_start_prompt(level: str | None, module: int | None) -> dict:
+    """
+    Build the OOP start prompt.  If level/module already parsed, start quiz.
+    Otherwise return a chooser card.
+    """
+    if _oops_engine is None:
+        return _oops_unavailable()
+
+    if level and module:
+        # Directly start
+        sess = _oops_engine.start_quiz(module=module, level=level)
+        session["oops"] = sess
+        q = _oops_engine.next_question(sess)
+        session["oops"] = sess   # update after next_question (no mutation, but be safe)
+        return q
+
+    buttons = []
+    for lvl in ("easy", "medium", "hard"):
+        buttons.append({"label": lvl.capitalize(), "action": f"level:{lvl}"})
+
+    return {
+        "type": "oops_start",
+        "text": (
+            "📚 **Welcome to OOP (Java) Exam Prep!**\n\n"
+            "Choose a difficulty level to start your interactive quiz:"
+        ),
+        "buttons": buttons,
+    }
+
+
+def _handle_difference_query(message: str) -> dict | None:
+    """If message asks 'difference between X and Y' and OOP keywords present, answer directly."""
+    if "difference between" not in message.lower():
+        return None
+    if _oops_engine is None:
+        return None
+    words = re.findall(r"[a-z]+", message.lower())
+    oop_words = [w for w in words if w in OOP_SUBJECT_KEYWORDS or w in TOPIC_TO_MODULE]
+    if not oop_words:
+        return None
+    q = _oops_engine.find_difference_question(oop_words)
+    if not q:
+        return None
+    return {
+        "type": "text",
+        "text": (
+            f"**{q['question']}**\n\n"
+            f"{q.get('answer', '')}\n\n"
+            f"💡 {q.get('explanation', '')}"
+        ),
+    }
+
+
+def get_response(message: str) -> dict:
+    """
+    Master router. Returns a dict (structured JSON response).
+
+    Priority:
+      1. OOP session in progress -> forward to session handler
+      2. Difference-between OOP query -> direct bank lookup
+      3. OOP intent (not pure info) -> start OOP flow
+      4. KB (subject / FAQ / semester)
+      5. ML classifier fallback
+    """
+    lowered = message.lower().strip()
+
+    # ---- 0. Explicit action handling from UI buttons ----
+    if message.startswith("__action__:"):
+        action = message.replace("__action__:", "").strip()
+        if action.startswith("level:"):
+            lvl = action.split(":", 1)[1]
+            sess = _oops_engine.start_quiz(level=lvl)
+            session["oops"] = sess
+            return _oops_engine.next_question(sess)
+        elif action.startswith("mode:mock"):
+            return _oops_engine.generate_mock_paper(level="mixed")
+        elif action.startswith("mode:revision"):
+            qs = _oops_engine.get_revision(module=1)
+            text = "📌 Important questions for Module 1:\n\n"
+            for i, q in enumerate(qs[:5], 1):
+                text += f"**{i}. {q['text']}** ({q['marks']} marks)\n   {q['model_answer'][:200]}...\n\n"
+            return _text_response(text)
+        elif action == "next":
+            oops_sess = session.get("oops")
+            if oops_sess:
+                return _oops_engine.next_question(oops_sess)
+            return _text_response("No active quiz session.")
+
+    # ---- 1. Active OOP quiz session ----
+    oops_sess = session.get("oops")
+    if oops_sess:
+        # Special commands
+        if lowered in ("quit", "exit", "stop quiz", "end quiz", "done"):
+            session.pop("oops", None)
+            return _text_response(
+                "Quiz ended. Type 'oops quiz' any time to start a new one!"
+            )
+        # Check if the user is asking an out-of-quiz question like "who is hod" or another query
+        if not message.startswith("__action__:answer:") and not message.startswith("__action__:"):
+            # If user asks another query or FAQ or subject, check if it's an explicit action or answer
+            pass
+        # Pass answer to engine
+        ans_payload = message.replace("__action__:answer:", "") if message.startswith("__action__:answer:") else message
+        result = _oops_engine.submit_answer(oops_sess, ans_payload)
+        session["oops"] = oops_sess   # persist updated session
+        # If quiz finished, attach summary
+        if oops_sess["current_idx"] >= oops_sess["total"]:
+            summary = _oops_engine._build_summary(oops_sess)
+            session.pop("oops", None)
+            result["summary"] = summary
+        return result
+
+    # ---- 2. Difference-between OOP query ----
+    diff_resp = _handle_difference_query(message)
+    if diff_resp:
+        return diff_resp
+
+    # ---- 3. OOP intent ----
+    if detect_oops_intent(message):
+        # Mock paper shortcut
+        if re.search(r"\bmock\b", lowered):
+            if _oops_engine is None:
+                return _oops_unavailable()
+            module = _parse_module(message)
+            level = _parse_level(message) or "mixed"
+            return _oops_engine.generate_mock_paper(level=level, module=module)
+
+        # Revision shortcut
+        if re.search(r"\b(revision|revise|important)\b", lowered):
+            if _oops_engine is None:
+                return _oops_unavailable()
+            module = _parse_module(message) or 1
+            qs = _oops_engine.get_revision(module)
+            if qs:
+                text = f"📌 Important questions for Module {module}:\n\n"
+                for i, q in enumerate(qs[:5], 1):
+                    text += f"**{i}. {q['text']}** ({q['marks']} marks)\n"
+                    text += f"   {q['model_answer'][:200]}...\n\n"
+                return _text_response(text)
+            return _text_response(
+                f"No important questions found for Module {module}."
+            )
+
+        # Code lab shortcut
+        if re.search(r"\bcode\s*lab\b|\bcode\s*practice\b|\bdebugg?ing\b", lowered):
+            if _oops_engine is None:
+                return _oops_unavailable()
+            module = _parse_module(message)
+            qs = _oops_engine.get_code_lab(module=module)
+            if qs:
+                text = "💻 Code Practice Questions:\n\n"
+                for i, q in enumerate(qs, 1):
+                    text += f"**{i}. [{q['qtype'].upper()}] {q['text']}**\n"
+                    if q.get("code"):
+                        text += f"```java\n{q['code']}\n```\n"
+                    text += "\n"
+                return _text_response(text)
+            return _text_response("No code/debug questions available.")
+
+        # Level/module parsed from message -> direct quiz start
+        level  = _parse_level(message)
+        module = _parse_module(message)
+        return _oops_start_prompt(level, module)
+
+    # ---- 4. KB lookup ----
+    kind, payload = kb_find_answer(message)
     if kind == "answer":
-        return payload
-    # Fall back to ML classifier
-    return ml_response(question)
+        return _text_response(payload)
 
+    # ---- 5. ML fallback ----
+    return _text_response(ml_response(message))
+
+
+# -----------------------------------------------------------------------
+# ROUTES
+# -----------------------------------------------------------------------
 
 @app.route("/")
 def intro():
@@ -768,9 +1101,132 @@ def chat():
     message = request.json.get("message", "").strip()
     if not message:
         return jsonify({"response": "Please type a question!"})
-    answer = get_response(message)
-    return jsonify({"response": answer})
+    if len(message) > MAX_MESSAGE_LENGTH:
+        return jsonify({
+            "response": (
+                f"Message too long (max {MAX_MESSAGE_LENGTH} chars). "
+                "Please shorten your question."
+            )
+        })
+    result = get_response(message)
+    # Legacy compatibility: if result has "type"="text", also set "response"
+    if isinstance(result, dict) and result.get("type") == "text":
+        result["response"] = result.get("text", "")
+    return jsonify(result)
 
+
+# ---- OOP-specific endpoints ----
+
+@app.route("/oops/start", methods=["POST"])
+def oops_start():
+    """
+    Start an OOP quiz session.
+    Body: {module: int|null, level: str, mode: str, n: int}
+    """
+    if _oops_engine is None:
+        return jsonify(_oops_unavailable()), 503
+
+    data   = request.get_json(silent=True) or {}
+    module = data.get("module")
+    level  = data.get("level", "easy")
+    mode   = data.get("mode", "quiz")
+    n      = int(data.get("n", 10))
+
+    if mode == "mock":
+        paper = _oops_engine.generate_mock_paper(
+            level=data.get("level", "mixed"),
+            module=module,
+        )
+        return jsonify(paper)
+
+    sess = _oops_engine.start_quiz(module=module, level=level, n=n)
+    session["oops"] = sess
+    q = _oops_engine.next_question(sess)
+    session["oops"] = sess
+    return jsonify(q)
+
+
+@app.route("/oops/next", methods=["GET"])
+def oops_next():
+    """Return the next question for the active quiz session."""
+    if _oops_engine is None:
+        return jsonify(_oops_unavailable()), 503
+
+    oops_sess = session.get("oops")
+    if not oops_sess:
+        return jsonify({"type": "error", "text": "No active quiz. POST /oops/start first."}), 400
+
+    q = _oops_engine.next_question(oops_sess)
+    session["oops"] = oops_sess
+    return jsonify(q)
+
+
+@app.route("/oops/answer", methods=["POST"])
+def oops_answer():
+    """
+    Submit an answer for the current question.
+    Body: {answer: str}
+    """
+    if _oops_engine is None:
+        return jsonify(_oops_unavailable()), 503
+
+    oops_sess = session.get("oops")
+    if not oops_sess:
+        return jsonify({"type": "error", "text": "No active quiz. POST /oops/start first."}), 400
+
+    data = request.get_json(silent=True) or {}
+    user_answer = data.get("answer", "").strip()
+
+    result = _oops_engine.submit_answer(oops_sess, user_answer)
+    session["oops"] = oops_sess
+
+    if oops_sess["current_idx"] >= oops_sess["total"]:
+        summary = _oops_engine._build_summary(oops_sess)
+        session.pop("oops", None)
+        result["summary"] = summary
+
+    return jsonify(result)
+
+
+@app.route("/oops/progress", methods=["GET"])
+def oops_progress():
+    """Return current quiz progress."""
+    if _oops_engine is None:
+        return jsonify(_oops_unavailable()), 503
+
+    oops_sess = session.get("oops")
+    if not oops_sess:
+        return jsonify({"type": "error", "text": "No active quiz."}), 400
+
+    return jsonify(_oops_engine.get_progress(oops_sess))
+
+
+@app.route("/download/oops-bank-pdf", methods=["GET"])
+def download_oops_bank_pdf():
+    """Endpoint to download the full OOP question bank as a PDF."""
+    pdf_filename = "GCECT_OOP_Question_Bank.pdf"
+    pdf_path = os.path.join(_HERE, "static", pdf_filename)
+    if not os.path.exists(pdf_path):
+        # Auto-generate if missing
+        try:
+            from generate_pdf import build_pdf
+            build_pdf(os.path.join(_HERE, "oops_bank.json"), pdf_path)
+        except Exception as e:
+            return jsonify({"error": f"Failed to generate PDF: {str(e)}"}), 500
+
+    from flask import send_file
+    return send_file(
+        pdf_path,
+        mimetype="application/pdf",
+        as_attachment=True,
+        download_name=pdf_filename
+    )
+
+
+# -----------------------------------------------------------------------
+# ENTRY POINT
+# -----------------------------------------------------------------------
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    debug_mode = os.environ.get("FLASK_DEBUG", "0") == "1"
+    app.run(debug=debug_mode)

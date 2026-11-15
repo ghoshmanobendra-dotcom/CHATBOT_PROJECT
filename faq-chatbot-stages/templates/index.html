@@ -9,6 +9,445 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="/static/style.css" />
+  <style>
+    /* ── OOP Exam Prep Styles ─────────────────────────────────────────── */
+
+    /* OOP card */
+    .oops-card {
+      background: linear-gradient(135deg, rgba(99,102,241,0.15), rgba(139,92,246,0.10));
+      border: 1px solid rgba(99,102,241,0.35);
+      border-radius: 14px;
+      padding: 1rem 1.2rem;
+      margin: 0.4rem 0;
+      max-width: 520px;
+    }
+    .oops-card p {
+      margin: 0 0 0.75rem;
+      font-size: 0.95rem;
+      line-height: 1.55;
+      color: #e2e8f0;
+    }
+    .oops-buttons {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+    .oops-btn {
+      background: rgba(99,102,241,0.25);
+      border: 1px solid rgba(99,102,241,0.5);
+      border-radius: 20px;
+      color: #c7d2fe;
+      cursor: pointer;
+      font-family: inherit;
+      font-size: 0.85rem;
+      font-weight: 500;
+      padding: 0.4rem 0.9rem;
+      transition: background 0.2s, border-color 0.2s;
+    }
+    .oops-btn:hover {
+      background: rgba(99,102,241,0.45);
+      border-color: rgba(99,102,241,0.8);
+    }
+
+    /* Quiz card */
+    .quiz-card {
+      background: rgba(15,23,42,0.75);
+      border: 1px solid rgba(99,102,241,0.3);
+      border-radius: 14px;
+      padding: 1.1rem 1.3rem;
+      margin: 0.4rem 0;
+      max-width: 560px;
+    }
+    .quiz-header {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      flex-wrap: wrap;
+      margin-bottom: 0.8rem;
+    }
+    .quiz-progress {
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: #94a3b8;
+      white-space: nowrap;
+    }
+    .progress-bar {
+      flex: 1;
+      min-width: 80px;
+      background: rgba(255,255,255,0.1);
+      border-radius: 999px;
+      height: 6px;
+      overflow: hidden;
+    }
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #6366f1, #8b5cf6);
+      border-radius: 999px;
+      transition: width 0.4s ease;
+    }
+    .quiz-marks {
+      font-size: 0.75rem;
+      color: #64748b;
+      white-space: nowrap;
+    }
+    .quiz-question {
+      font-size: 0.97rem;
+      line-height: 1.6;
+      color: #e2e8f0;
+      margin: 0.5rem 0 0.8rem;
+    }
+
+    /* Java code block */
+    .quiz-card pre {
+      background: #0d1117;
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 8px;
+      padding: 0.75rem 1rem;
+      margin: 0.5rem 0 0.8rem;
+      overflow-x: auto;
+    }
+    .quiz-card pre code.java {
+      font-family: 'Fira Code', 'Consolas', 'Courier New', monospace;
+      font-size: 0.82rem;
+      color: #e6edf3;
+      white-space: pre;
+    }
+
+    /* MCQ options */
+    .mcq-options {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.5rem;
+      margin: 0.5rem 0 0.8rem;
+    }
+    .mcq-btn {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 10px;
+      color: #cbd5e1;
+      cursor: pointer;
+      font-family: inherit;
+      font-size: 0.85rem;
+      padding: 0.6rem 0.75rem;
+      text-align: left;
+      transition: background 0.18s, border-color 0.18s;
+      word-break: break-word;
+    }
+    .mcq-btn:hover {
+      background: rgba(99,102,241,0.2);
+      border-color: rgba(99,102,241,0.5);
+      color: #e2e8f0;
+    }
+    .mcq-btn.selected {
+      background: rgba(99,102,241,0.35);
+      border-color: #6366f1;
+      color: #e0e7ff;
+    }
+
+    /* True/False buttons */
+    .tf-options {
+      display: flex;
+      gap: 0.6rem;
+      margin: 0.5rem 0 0.8rem;
+    }
+    .tf-btn {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 10px;
+      color: #cbd5e1;
+      cursor: pointer;
+      font-family: inherit;
+      font-size: 0.9rem;
+      font-weight: 500;
+      padding: 0.55rem 1.4rem;
+      transition: background 0.18s, border-color 0.18s;
+    }
+    .tf-btn:hover {
+      background: rgba(99,102,241,0.2);
+      border-color: rgba(99,102,241,0.5);
+    }
+
+    /* Written answer textarea */
+    .answer-input {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 10px;
+      color: #e2e8f0;
+      display: block;
+      font-family: inherit;
+      font-size: 0.9rem;
+      line-height: 1.5;
+      margin-bottom: 0.6rem;
+      min-height: 90px;
+      padding: 0.65rem 0.85rem;
+      resize: vertical;
+      transition: border-color 0.2s;
+      width: 100%;
+      box-sizing: border-box;
+    }
+    .answer-input:focus {
+      border-color: rgba(99,102,241,0.6);
+      outline: none;
+    }
+    .answer-input::placeholder { color: #475569; }
+
+    /* Submit / Next buttons */
+    .submit-btn, .next-btn {
+      background: linear-gradient(135deg, #6366f1, #8b5cf6);
+      border: none;
+      border-radius: 20px;
+      color: #fff;
+      cursor: pointer;
+      font-family: inherit;
+      font-size: 0.88rem;
+      font-weight: 600;
+      padding: 0.55rem 1.4rem;
+      transition: opacity 0.2s, transform 0.1s;
+    }
+    .submit-btn:hover, .next-btn:hover { opacity: 0.88; transform: translateY(-1px); }
+    .submit-btn:active, .next-btn:active { transform: translateY(0); }
+
+    /* Feedback card */
+    .feedback-card {
+      background: rgba(15,23,42,0.80);
+      border-radius: 14px;
+      padding: 1rem 1.3rem;
+      margin: 0.4rem 0;
+      max-width: 560px;
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+    .feedback-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-weight: 600;
+      font-size: 1rem;
+      margin-bottom: 0.6rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 1px solid rgba(255,255,255,0.07);
+    }
+    .feedback-card.correct .feedback-header { color: #4ade80; }
+    .feedback-card.incorrect .feedback-header { color: #f87171; }
+    .score-badge {
+      background: rgba(255,255,255,0.1);
+      border-radius: 999px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      padding: 0.2rem 0.65rem;
+      color: #e2e8f0;
+    }
+    .missing-kw {
+      background: rgba(251,191,36,0.1);
+      border: 1px solid rgba(251,191,36,0.25);
+      border-radius: 8px;
+      color: #fbbf24;
+      font-size: 0.82rem;
+      margin: 0.5rem 0;
+      padding: 0.4rem 0.7rem;
+    }
+    .explanation {
+      color: #94a3b8;
+      font-size: 0.87rem;
+      line-height: 1.55;
+      margin: 0.5rem 0;
+    }
+    .model-answer-toggle {
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 8px;
+      margin: 0.5rem 0;
+    }
+    .model-answer-toggle summary {
+      cursor: pointer;
+      font-size: 0.85rem;
+      font-weight: 500;
+      color: #818cf8;
+      padding: 0.45rem 0.75rem;
+      user-select: none;
+    }
+    .model-answer-toggle summary:hover { color: #a5b4fc; }
+    .model-answer {
+      background: rgba(255,255,255,0.03);
+      border-top: 1px solid rgba(255,255,255,0.06);
+      color: #cbd5e1;
+      font-size: 0.87rem;
+      line-height: 1.6;
+      padding: 0.6rem 0.75rem;
+      white-space: pre-wrap;
+    }
+
+    /* Summary card */
+    .summary-card {
+      background: linear-gradient(135deg, rgba(15,23,42,0.9), rgba(30,27,75,0.85));
+      border: 1px solid rgba(99,102,241,0.35);
+      border-radius: 16px;
+      padding: 1.4rem 1.5rem;
+      margin: 0.4rem 0;
+      max-width: 480px;
+      text-align: center;
+    }
+    .summary-card h3 {
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: #e2e8f0;
+      margin: 0 0 0.9rem;
+    }
+    .score-circle {
+      background: linear-gradient(135deg, #6366f1, #8b5cf6);
+      border-radius: 50%;
+      color: #fff;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      font-weight: 700;
+      height: 90px;
+      width: 90px;
+      margin: 0 auto 0.4rem;
+    }
+    .score-pct {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: #a5b4fc;
+      margin-bottom: 0.3rem;
+    }
+    .grade-badge {
+      background: rgba(99,102,241,0.2);
+      border: 1px solid rgba(99,102,241,0.4);
+      border-radius: 999px;
+      color: #c7d2fe;
+      display: inline-block;
+      font-size: 0.85rem;
+      font-weight: 700;
+      padding: 0.2rem 0.9rem;
+      margin-bottom: 1rem;
+    }
+    .weak-topics {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 10px;
+      margin: 0.6rem 0;
+      padding: 0.7rem 0.9rem;
+      text-align: left;
+    }
+    .weak-topics h4 {
+      color: #fbbf24;
+      font-size: 0.85rem;
+      font-weight: 600;
+      margin: 0 0 0.4rem;
+    }
+    .weak-topics ul {
+      margin: 0;
+      padding-left: 1.2rem;
+      color: #94a3b8;
+      font-size: 0.84rem;
+      line-height: 1.7;
+    }
+    .recommendation {
+      color: #64748b;
+      font-size: 0.84rem;
+      margin: 0.5rem 0 0.9rem;
+      text-align: left;
+    }
+    .summary-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      justify-content: center;
+    }
+    .summary-actions button {
+      background: rgba(99,102,241,0.2);
+      border: 1px solid rgba(99,102,241,0.4);
+      border-radius: 20px;
+      color: #c7d2fe;
+      cursor: pointer;
+      font-family: inherit;
+      font-size: 0.83rem;
+      font-weight: 500;
+      padding: 0.42rem 0.9rem;
+      transition: background 0.2s;
+    }
+    .summary-actions button:hover {
+      background: rgba(99,102,241,0.4);
+    }
+
+    /* Mock paper */
+    .mock-paper {
+      background: rgba(15,23,42,0.80);
+      border: 1px solid rgba(99,102,241,0.25);
+      border-radius: 14px;
+      padding: 1.2rem 1.4rem;
+      margin: 0.4rem 0;
+      max-width: 600px;
+    }
+    .mock-paper h3 {
+      color: #e2e8f0;
+      font-size: 1.05rem;
+      font-weight: 700;
+      margin: 0 0 0.9rem;
+    }
+    .paper-section {
+      margin-bottom: 1rem;
+    }
+    .paper-section h4 {
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+      color: #818cf8;
+      font-size: 0.88rem;
+      font-weight: 600;
+      margin: 0 0 0.5rem;
+      padding-bottom: 0.35rem;
+    }
+    .paper-section ol {
+      margin: 0;
+      padding-left: 1.3rem;
+      color: #cbd5e1;
+      font-size: 0.9rem;
+      line-height: 1.75;
+    }
+    .paper-section li { margin-bottom: 0.25rem; }
+    .reveal-btn {
+      background: linear-gradient(135deg, #0ea5e9, #6366f1);
+      border: none;
+      border-radius: 20px;
+      color: #fff;
+      cursor: pointer;
+      font-family: inherit;
+      font-size: 0.87rem;
+      font-weight: 600;
+      margin-top: 0.6rem;
+      padding: 0.5rem 1.3rem;
+      transition: opacity 0.2s;
+    }
+    .reveal-btn:hover { opacity: 0.85; }
+
+    /* OOP chips */
+    .chip.oops-chip {
+      background: linear-gradient(135deg, rgba(99,102,241,0.2), rgba(139,92,246,0.15));
+      border-color: rgba(99,102,241,0.4);
+      color: #c7d2fe;
+    }
+    .chip.oops-chip:hover {
+      background: linear-gradient(135deg, rgba(99,102,241,0.4), rgba(139,92,246,0.3));
+    }
+
+    /* Structured bot message wrapper */
+    .structured-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.6rem;
+      margin: 0.4rem 0;
+    }
+    .structured-row .avatar { flex-shrink: 0; }
+
+    /* Mobile adjustments */
+    @media (max-width: 600px) {
+      .mcq-options { grid-template-columns: 1fr; }
+      .quiz-card, .oops-card, .feedback-card, .summary-card, .mock-paper {
+        max-width: 100%;
+      }
+      .score-circle { height: 72px; width: 72px; font-size: 1.2rem; }
+      .summary-actions { flex-direction: column; align-items: stretch; }
+    }
+  </style>
 </head>
 <body>
 
@@ -48,6 +487,9 @@
       <button class="chip" data-q="Tell me about internships">Internship</button>
       <button class="chip" data-q="What is Bytemonk?">Bytemonk</button>
       <button class="chip" data-q="Contact details">Contact</button>
+      <!-- OOP exam prep chips -->
+      <button class="chip oops-chip" data-q="oops quiz">🎯 OOP Quiz</button>
+      <button class="chip oops-chip" data-q="hard questions on multithreading">🔥 Hard OOP</button>
     </div>
 
     <!-- CHAT WINDOW -->
@@ -85,10 +527,13 @@
 
     // ── helpers ────────────────────────────────────────────────────────
     function escapeHtml(text) {
-      return text
+      if (text == null) return '';
+      return String(text)
         .replace(/&/g, '&amp;')
         .replace(/</g, '&lt;')
-        .replace(/>/g, '&gt;');
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
     }
 
     /** Convert plain-text formatting to HTML */
@@ -158,12 +603,374 @@
       if (el) el.remove();
     }
 
+    // ── structured rendering ───────────────────────────────────────────
+
+    /**
+     * Wraps a structured card element in a bot message row (with avatar).
+     */
+    function wrapStructured(el) {
+      const row = document.createElement('div');
+      row.className = 'structured-row';
+
+      const avatar = document.createElement('div');
+      avatar.className = 'avatar bot-avatar';
+      avatar.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a5 5 0 1 1 0 10A5 5 0 0 1 12 2zm0 12c5.523 0 10 2.239 10 5v1H2v-1c0-2.761 4.477-5 10-5z"/></svg>';
+      row.appendChild(avatar);
+      row.appendChild(el);
+
+      chatBox.appendChild(row);
+      chatBox.scrollTop = chatBox.scrollHeight;
+    }
+
+    /**
+     * Post an internal action message to /chat without showing it as user text.
+     */
+    async function postAction(action) {
+      showTyping();
+      sendBtn.disabled = true;
+      try {
+        const res = await fetch('/chat', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ message: '__action__:' + action }),
+        });
+        const data = await res.json();
+        removeTyping();
+        if (data.type) {
+          renderStructured(data);
+        } else {
+          addMessage(data.response || '', 'bot');
+        }
+      } catch (err) {
+        removeTyping();
+        addMessage('Sorry, something went wrong. Please try again.', 'bot');
+      }
+      sendBtn.disabled = false;
+    }
+
+    function renderStructured(data) {
+      switch (data.type) {
+
+        // ── plain text ──────────────────────────────────────────────────
+        case 'text':
+          addMessage(data.text || '', 'bot');
+          break;
+
+        // ── oops start card ─────────────────────────────────────────────
+        case 'oops_start': {
+          const card = document.createElement('div');
+          card.className = 'oops-card';
+
+          const p = document.createElement('p');
+          p.innerHTML = formatText(data.text || '');
+          card.appendChild(p);
+
+          if (Array.isArray(data.buttons) && data.buttons.length) {
+            const btnRow = document.createElement('div');
+            btnRow.className = 'oops-buttons';
+            data.buttons.forEach(b => {
+              const btn = document.createElement('button');
+              btn.className = 'oops-btn';
+              btn.dataset.action = escapeHtml(b.action);
+              btn.textContent = b.label;
+              btn.addEventListener('click', () => postAction(b.action));
+              btnRow.appendChild(btn);
+            });
+            card.appendChild(btnRow);
+          }
+          wrapStructured(card);
+          break;
+        }
+
+        // ── quiz question ───────────────────────────────────────────────
+        case 'quiz_question': {
+          const card = document.createElement('div');
+          card.className = 'quiz-card';
+
+          // Header: progress + bar + marks/level
+          const header = document.createElement('div');
+          header.className = 'quiz-header';
+
+          const prog = document.createElement('span');
+          prog.className = 'quiz-progress';
+          prog.textContent = 'Question ' + escapeHtml(String(data.question_no || '?')) + '/' + escapeHtml(String(data.total || '?'));
+
+          const pct = data.total ? Math.round((data.question_no / data.total) * 100) : 0;
+          const barWrap = document.createElement('div');
+          barWrap.className = 'progress-bar';
+          const fill = document.createElement('div');
+          fill.className = 'progress-fill';
+          fill.style.width = pct + '%';
+          barWrap.appendChild(fill);
+
+          const marks = document.createElement('span');
+          marks.className = 'quiz-marks';
+          marks.textContent = escapeHtml(String(data.marks || '')) + ' marks · ' + escapeHtml(data.level || '');
+
+          header.appendChild(prog);
+          header.appendChild(barWrap);
+          header.appendChild(marks);
+          card.appendChild(header);
+
+          // Question text
+          const qText = document.createElement('p');
+          qText.className = 'quiz-question';
+          qText.innerHTML = formatText(data.question || data.text || '');
+          card.appendChild(qText);
+
+          // Optional Java code
+          if (data.code) {
+            const pre = document.createElement('pre');
+            const code = document.createElement('code');
+            code.className = 'java';
+            code.textContent = data.code; // textContent auto-escapes
+            pre.appendChild(code);
+            card.appendChild(pre);
+          }
+
+          const qtype = data.qtype || '';
+
+          // MCQ options
+          if (qtype === 'mcq' && data.options) {
+            const grid = document.createElement('div');
+            grid.className = 'mcq-options';
+            ['A', 'B', 'C', 'D'].forEach(key => {
+              if (data.options[key] === undefined) return;
+              const btn = document.createElement('button');
+              btn.className = 'mcq-btn';
+              btn.dataset.opt = key;
+              btn.textContent = key + '. ' + data.options[key];
+              btn.addEventListener('click', () => {
+                // Visual feedback
+                grid.querySelectorAll('.mcq-btn').forEach(b => b.classList.remove('selected'));
+                btn.classList.add('selected');
+                setTimeout(() => postAction('answer:' + key), 300);
+              });
+              grid.appendChild(btn);
+            });
+            card.appendChild(grid);
+
+          // True / False
+          } else if (qtype === 'true_false') {
+            const tfRow = document.createElement('div');
+            tfRow.className = 'tf-options';
+            ['True', 'False'].forEach(val => {
+              const btn = document.createElement('button');
+              btn.className = 'tf-btn';
+              btn.textContent = val;
+              btn.addEventListener('click', () => postAction('answer:' + val));
+              tfRow.appendChild(btn);
+            });
+            card.appendChild(tfRow);
+
+          // Written answer (short / difference / long / program / debug / code_output)
+          } else {
+            const ta = document.createElement('textarea');
+            ta.className = 'answer-input';
+            ta.placeholder = 'Type your answer here…';
+            card.appendChild(ta);
+
+            const sub = document.createElement('button');
+            sub.className = 'submit-btn';
+            sub.textContent = 'Submit Answer';
+            sub.addEventListener('click', () => {
+              const ans = ta.value.trim();
+              if (!ans) return;
+              postAction('answer:' + ans);
+            });
+            card.appendChild(sub);
+          }
+
+          wrapStructured(card);
+          break;
+        }
+
+        // ── feedback ────────────────────────────────────────────────────
+        case 'feedback': {
+          const card = document.createElement('div');
+          card.className = 'feedback-card ' + (data.correct ? 'correct' : 'incorrect');
+
+          const fh = document.createElement('div');
+          fh.className = 'feedback-header';
+
+          const verdict = document.createElement('span');
+          verdict.textContent = data.correct ? '✅ Correct!' : '❌ Incorrect';
+
+          const badge = document.createElement('span');
+          badge.className = 'score-badge';
+          badge.textContent = escapeHtml(String(data.score || 0)) + '/' + escapeHtml(String(data.max_marks || 0));
+
+          fh.appendChild(verdict);
+          fh.appendChild(badge);
+          card.appendChild(fh);
+
+          // Missing keywords (only when partial / wrong)
+          if (!data.correct && Array.isArray(data.missing_keywords) && data.missing_keywords.length) {
+            const mk = document.createElement('div');
+            mk.className = 'missing-kw';
+            mk.textContent = 'Missing key points: ' + data.missing_keywords.join(', ');
+            card.appendChild(mk);
+          }
+
+          // Explanation
+          if (data.explanation) {
+            const exp = document.createElement('div');
+            exp.className = 'explanation';
+            exp.innerHTML = formatText(data.explanation);
+            card.appendChild(exp);
+          }
+
+          // Model answer (collapsible)
+          if (data.model_answer) {
+            const details = document.createElement('details');
+            details.className = 'model-answer-toggle';
+            const summary = document.createElement('summary');
+            summary.textContent = '📖 Model Answer';
+            const ma = document.createElement('div');
+            ma.className = 'model-answer';
+            ma.textContent = data.model_answer; // textContent — safe
+            details.appendChild(summary);
+            details.appendChild(ma);
+            card.appendChild(details);
+          }
+
+          // Next button
+          const nextBtn = document.createElement('button');
+          nextBtn.className = 'next-btn';
+          nextBtn.style.marginTop = '0.6rem';
+          nextBtn.textContent = 'Next Question →';
+          nextBtn.addEventListener('click', () => postAction('next'));
+          card.appendChild(nextBtn);
+
+          wrapStructured(card);
+          break;
+        }
+
+        // ── summary ─────────────────────────────────────────────────────
+        case 'summary': {
+          const card = document.createElement('div');
+          card.className = 'summary-card';
+
+          const h3 = document.createElement('h3');
+          h3.textContent = '🎓 Quiz Complete!';
+          card.appendChild(h3);
+
+          const circle = document.createElement('div');
+          circle.className = 'score-circle';
+          circle.textContent = escapeHtml(String(data.total_score || 0)) + '/' + escapeHtml(String(data.max_score || 0));
+          card.appendChild(circle);
+
+          const pctDiv = document.createElement('div');
+          pctDiv.className = 'score-pct';
+          const pct = data.max_score ? Math.round((data.total_score / data.max_score) * 100) : 0;
+          pctDiv.textContent = pct + '%';
+          card.appendChild(pctDiv);
+
+          const grade = document.createElement('div');
+          grade.className = 'grade-badge';
+          grade.textContent = escapeHtml(data.grade || '');
+          card.appendChild(grade);
+
+          if (Array.isArray(data.weak_topics) && data.weak_topics.length) {
+            const wt = document.createElement('div');
+            wt.className = 'weak-topics';
+            const wth = document.createElement('h4');
+            wth.textContent = '📌 Topics to Revise';
+            wt.appendChild(wth);
+            const ul = document.createElement('ul');
+            data.weak_topics.forEach(t => {
+              const li = document.createElement('li');
+              li.textContent = t;
+              ul.appendChild(li);
+            });
+            wt.appendChild(ul);
+            card.appendChild(wt);
+          }
+
+          if (data.recommendation) {
+            const rec = document.createElement('p');
+            rec.className = 'recommendation';
+            rec.textContent = data.recommendation;
+            card.appendChild(rec);
+          }
+
+          const actions = document.createElement('div');
+          actions.className = 'summary-actions';
+          const summaryBtns = [
+            { label: '🔁 New Quiz',      action: 'oops:quiz' },
+            { label: '📚 Revision Mode', action: 'oops:revision' },
+          ];
+          summaryBtns.forEach(b => {
+            const btn = document.createElement('button');
+            btn.dataset.action = b.action;
+            btn.textContent = b.label;
+            btn.addEventListener('click', () => postAction(b.action));
+            actions.appendChild(btn);
+          });
+          card.appendChild(actions);
+
+          wrapStructured(card);
+          break;
+        }
+
+        // ── mock paper ──────────────────────────────────────────────────
+        case 'mock_paper': {
+          const card = document.createElement('div');
+          card.className = 'mock-paper';
+
+          const title = document.createElement('h3');
+          title.textContent = '📝 Mock Examination Paper';
+          card.appendChild(title);
+
+          const sections = [
+            { key: 'section_a', heading: 'Section A — Short Answer (2 marks each)' },
+            { key: 'section_b', heading: 'Section B — Descriptive (5 marks each)' },
+            { key: 'section_c', heading: 'Section C — Long Answer (10 marks each)' },
+          ];
+
+          sections.forEach(sec => {
+            const qs = data[sec.key];
+            if (!Array.isArray(qs) || !qs.length) return;
+            const div = document.createElement('div');
+            div.className = 'paper-section';
+            const h4 = document.createElement('h4');
+            h4.textContent = sec.heading;
+            div.appendChild(h4);
+            const ol = document.createElement('ol');
+            qs.forEach(q => {
+              const li = document.createElement('li');
+              li.textContent = typeof q === 'string' ? q : (q.question || '');
+              ol.appendChild(li);
+            });
+            div.appendChild(ol);
+            card.appendChild(div);
+          });
+
+          const revBtn = document.createElement('button');
+          revBtn.className = 'reveal-btn';
+          revBtn.textContent = '📖 Reveal Model Answers';
+          revBtn.addEventListener('click', () => postAction('reveal_answers'));
+          card.appendChild(revBtn);
+
+          wrapStructured(card);
+          break;
+        }
+
+        // ── fallback ────────────────────────────────────────────────────
+        default:
+          addMessage(data.text || data.response || JSON.stringify(data), 'bot');
+      }
+    }
+
     // ── send ───────────────────────────────────────────────────────────
     async function sendMessage(text) {
       const msg = (text || input.value).trim();
       if (!msg) return;
 
-      addMessage(msg, 'user');
+      // Don't echo internal action messages as user bubbles
+      if (!msg.startsWith('__action__:')) {
+        addMessage(msg, 'user');
+      }
       input.value = '';
       sendBtn.disabled = true;
       showTyping();
@@ -176,7 +983,11 @@
         });
         const data = await res.json();
         removeTyping();
-        addMessage(data.response, 'bot');
+        if (data.type) {
+          renderStructured(data);
+        } else {
+          addMessage(data.response, 'bot');
+        }
       } catch (err) {
         removeTyping();
         addMessage('Sorry, I couldn\'t reach the server. Please try again.', 'bot');
