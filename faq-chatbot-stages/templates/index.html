@@ -665,6 +665,18 @@
           p.innerHTML = formatText(data.text || '');
           card.appendChild(p);
 
+          if (data.pdf_url) {
+            const pdfBox = document.createElement('div');
+            pdfBox.style.margin = '0.8rem 0 1rem 0';
+            pdfBox.innerHTML = `
+              <a href="${escapeHtml(data.pdf_url)}" target="_blank" download class="oops-btn" style="display:inline-flex; align-items:center; gap:0.5rem; background:linear-gradient(135deg, #10b981, #059669); color:#ffffff; font-weight:600; text-decoration:none; padding:0.65rem 1.2rem; border-radius:10px; box-shadow:0 4px 14px rgba(16,185,129,0.35);">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                📥 Download OOP Question Bank (PDF)
+              </a>
+            `;
+            card.appendChild(pdfBox);
+          }
+
           if (Array.isArray(data.buttons) && data.buttons.length) {
             const btnRow = document.createElement('div');
             btnRow.className = 'oops-buttons';

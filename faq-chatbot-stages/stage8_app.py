@@ -924,10 +924,14 @@ def _oops_start_prompt(level: str | None, module: int | None) -> dict:
     return {
         "type": "oops_start",
         "text": (
-            "📚 **Welcome to OOP (Java) Exam Prep!**\n\n"
-            "Choose a difficulty level to start your interactive quiz:"
+            "📚 **Welcome to Java / OOPs Exam Preparation!**\n\n"
+            "📥 **Step 1 — Download Question Bank (PDF):**\n"
+            "First, download and review the complete syllabus question bank containing all Easy (2 marks), Medium (5 marks), and Hard (10 marks) questions with comprehensive model answers.\n\n"
+            "🚀 **Step 2 — Interactive Chat Quiz:**\n"
+            "Once you are ready to test your knowledge, choose your difficulty level below to begin the live quiz directly in chat:"
         ),
         "buttons": buttons,
+        "pdf_url": "/download/oops-bank-pdf",
     }
 
 
